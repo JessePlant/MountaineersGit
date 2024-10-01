@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GertController : MonoBehaviour
+public class CharacterController : MonoBehaviour
 {
-    CameraController cc;
+    public CameraController cc;
     GameObject Gert, Emily;
     Vector2 gertPos, emilyPos;
     float charDif;
@@ -15,7 +15,7 @@ public class GertController : MonoBehaviour
     {
         Gert = GameObject.Find("Gert");
         Emily = GameObject.Find("Emily");
-        cc = GetComponent<CameraController>();
+        cc = GameObject.Find("Main Camera").GetComponent<CameraController>();
     }
 
     // Update is called once per frame
