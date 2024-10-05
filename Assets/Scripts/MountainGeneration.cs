@@ -12,9 +12,10 @@ public class MountainGeneration : MonoBehaviour
     float GertPos;
     float EmilyPos;
     bool hasInstantiated = false;
+    int currentLevel = 1;
     void Start()
     {
-        Instantiate(mountainPrefab, new Vector3(0, 0, 2), Quaternion.identity);
+        Instantiate(mountainPrefab, new Vector3(0, 0, 3), Quaternion.identity);
         need2Instantiate = Mheight;
         GertPos = cameraController.target1.transform.position.y;
         EmilyPos = cameraController.target2.transform.position.y;
@@ -24,16 +25,12 @@ public class MountainGeneration : MonoBehaviour
     {
         GertPos = cameraController.target1.transform.position.y;
         EmilyPos = cameraController.target2.transform.position.y;
+        float highestPlayerPos = Mathf.Max(GertPos, EmilyPos);
 
-        if ((GertPos >= (need2Instantiate-2) || EmilyPos >= (need2Instantiate - 2)) && !hasInstantiated)
+        if (highestPlayerPos >= (currentLevel * Mheight) - 2f)
         {
-            Instantiate(mountainPrefab, new Vector3(0, need2Instantiate, 2), Quaternion.identity);
-            need2Instantiate += Mheight;
-            hasInstantiated = true;
-        }
-        if (GertPos < (need2Instantiate - 2) && EmilyPos < (need2Instantiate - 2))
-        {
-            hasInstantiated = false;
+            Instantiate(mountainPrefab, new Vector3(0, currentLevel * Mheight, 3), Quaternion.identity);
+            currentLevel++;
         }
     }
 }
