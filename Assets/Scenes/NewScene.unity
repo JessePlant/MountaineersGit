@@ -655,6 +655,7 @@ MonoBehaviour:
   speed: 3.5
   lastTime: 0
   cameraController: {fileID: 2015752879}
+  mousePos: {x: 0, y: 0, z: 0}
 --- !u!4 &591637844
 Transform:
   m_ObjectHideFlags: 0
