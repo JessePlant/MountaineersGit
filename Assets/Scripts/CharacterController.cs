@@ -21,10 +21,10 @@ public class CharacterController : MonoBehaviour
     void Start()
     {
         Gert = GameObject.Find("Gert");
-        Gert.transform.position = new Vector3(0, 0.4f, 0);
+        //Gert.transform.position = new Vector3(0, 0.4f, 0);
         Emily = GameObject.Find("Emily");
         cc = GameObject.Find("Main Camera").GetComponent<CameraController>();
-        Emily.transform.position = new Vector3(2.3f, 0.4f, 0);
+        //Emily.transform.position = new Vector3(2.3f, 0.4f, 0);
     }
 
     // Update is called once per frame
@@ -36,12 +36,27 @@ public class CharacterController : MonoBehaviour
 
         if (Math.Abs(charDif) <= 8)
         {
+            if(cc.onGert)
+            {
+                Movement(Gert, cc.onGert);
+
+            }
+            else
+            {
+                Movement(Emily, cc.onGert);
+            }
+        }
+        else 
+        {
+            //Let them move only if it is towards each other.
+        }
+            /*
             if (cc.onGert)
             {
                 if (true) //staminaController.Gert > 10
                 {
                     Movement(Gert, cc.onGert);
-                    Debug.Log("Gert Moving");
+                    //Debug.Log("Gert Moving");
                     lastTime = Time.time;
                 }
             }
@@ -51,7 +66,7 @@ public class CharacterController : MonoBehaviour
                 {
                     Movement(Emily, cc.onGert);
                     lastTime = Time.time;
-                    Debug.Log("Emily Moving");
+                    //Debug.Log("Emily Moving");
                 }
             }
         }
@@ -73,7 +88,10 @@ public class CharacterController : MonoBehaviour
             }
 
         }
+    
+*/
     }
+
 
     public void Movement(GameObject gameObject,bool isLocked)
     {
@@ -85,6 +103,7 @@ public class CharacterController : MonoBehaviour
         else
         {
 
+
             //if (Math.Abs(charDif) <= 8)
             //{
                 if (Input.GetKey(KeyCode.W)) //Move up
@@ -93,6 +112,7 @@ public class CharacterController : MonoBehaviour
                     move = Vector3.up * movementSpeed * Time.deltaTime;
                     gameObject.transform.Translate(move);
                     staminaController.useStam(isLocked);
+                    Debug.Log(gameObject + " is moving up.");
 
                 }
                 if (Input.GetKey(KeyCode.S)) //Move Down
@@ -101,6 +121,7 @@ public class CharacterController : MonoBehaviour
                     move = Vector3.down * movementSpeed * Time.deltaTime;
                     gameObject.transform.Translate(move);
                     staminaController.useStam(isLocked);
+                    Debug.Log(gameObject + " is moving down.");
 
                 }
                 if (Input.GetKey(KeyCode.D)) //Move Right
@@ -109,6 +130,7 @@ public class CharacterController : MonoBehaviour
                     move = Vector3.right * movementSpeed * Time.deltaTime;
                     gameObject.transform.Translate(move);
                     staminaController.useStam(isLocked);
+                    Debug.Log(gameObject + " is moving left.");
 
                 }
                 if (Input.GetKey(KeyCode.A)) //Move Left
@@ -117,6 +139,7 @@ public class CharacterController : MonoBehaviour
                     move = Vector3.left * movementSpeed * Time.deltaTime;
                     gameObject.transform.Translate(move);
                     staminaController.useStam(isLocked);
+                    Debug.Log(gameObject + " is moving right.");
                 }
             //}
 //This block of code is responsible for movement.
