@@ -35,11 +35,11 @@ public class AttackController : MonoBehaviour
                 {
                     worldPos = hit.point;
                     print(worldPos);
+                    Instantiate(bulletPrefab, camera.target1.transform.position, Quaternion.identity);
                 }
-                Instantiate(bulletPrefab, camera.target1.transform.position, Quaternion.identity);
             }
         }
     }
-
+    
 
 }
