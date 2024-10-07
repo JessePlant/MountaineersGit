@@ -12,6 +12,7 @@ public class AttackController : MonoBehaviour
     public float lastTime = 0; // Remember to implement the cooldown
     public CameraController cameraController;
     public Vector3 mousePos;
+    public Vector3 worldPos;
     void Start()
     {}
 
@@ -27,14 +28,15 @@ public class AttackController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                mousePos = Input.mousePosition;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Debug.Log("Mouse Position:"+ mousePos);
                 RaycastHit hit;
-                if (Physics.Raycast(cameraController.target1.transform.position, cameraController.target1.transform.forward, out hit))
+                if (Physics.Raycast(ray, out hit))
                 {
-                    print(hit);
+                    worldPos = hit.point;
+                    print(worldPos);
                 }
                 Instantiate(bulletPrefab, camera.target1.transform.position, Quaternion.identity);
-                
             }
         }
     }

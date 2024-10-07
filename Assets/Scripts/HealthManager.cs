@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
-    public int Ghealth;
-    public int Ehealth;
+    public float Ghealth;
+    public float Ehealth;
     public CameraController cameraController;
     // Start is called before the first frame update
     void Start()
@@ -23,10 +23,10 @@ public class HealthManager : MonoBehaviour
     {
         if( other.gameObject.tag == "enemy")
         {
-            PlayerDamage(10, cameraController);
+            PlayerDamage(10f, cameraController);
         }
     }
-    public void PlayerDamage(int damage,CameraController camera)
+    public void PlayerDamage(float damage,CameraController camera)
     {
         if (camera.onGert)
         {
