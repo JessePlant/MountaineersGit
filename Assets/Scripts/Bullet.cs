@@ -21,8 +21,6 @@ public class Bullet : MonoBehaviour
         mousePos = Input.mousePosition;
         Debug.Log("MousePosition"+ mousePos);
         Debug.Log("Bullet Position"+ transform.position);
-        Vector2 temp = new Vector2(mousePos.x - transform.position.x, mousePos.y - transform.position.y).normalized;
-        dir = new Vector3(temp.x,temp.y,0);
     }
 
     // Update is called once per frame

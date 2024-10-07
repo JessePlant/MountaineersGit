@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharacterController : MonoBehaviour
 {
     public CameraController cc;
-    GameObject Gert, Emily;
+    public GameObject Gert, Emily;
     Vector2 gertPos, emilyPos;
     float charDif;
     bool wiDist;
@@ -16,7 +16,9 @@ public class CharacterController : MonoBehaviour
     float movementSpeed = 1f;
     Vector3 move;
     public bool isClimbing = true;
-    public GameObject bulletPrefab; // Handle the cooldown between shots in AttackController - Can simulate upgrades to different types of guns and slingshots
+    public GameObject bulletPrefab;
+    [SerializeField] private float speed = 5f;
+    // Handle the cooldown between shots in AttackController - Can simulate upgrades to different types of guns and slingshots
     // Start is called before the first frame update
     void Start()
     {
@@ -36,13 +38,13 @@ public class CharacterController : MonoBehaviour
 
         if (Math.Abs(charDif) <= 8)
         {
-            if(cc.onGert)
+            if(cc.onGert) //if (staminaController.Gert > 10)
             {
-                Movement(Gert, cc.onGert);
+                Movement(Gert,cc.onGert);
 
             }
             else
-            {
+            {  // if (staminaController.Emily > 10)
                 Movement(Emily, cc.onGert);
             }
         }
@@ -53,7 +55,7 @@ public class CharacterController : MonoBehaviour
             /*
             if (cc.onGert)
             {
-                if (true) //staminaController.Gert > 10
+                if (true) 
                 {
                     Movement(Gert, cc.onGert);
                     //Debug.Log("Gert Moving");
@@ -62,7 +64,7 @@ public class CharacterController : MonoBehaviour
             }
             else
             {
-                if (true) // staminaController.Emily > 10
+                if (true) 
                 {
                     Movement(Emily, cc.onGert);
                     lastTime = Time.time;
@@ -151,4 +153,13 @@ public class CharacterController : MonoBehaviour
         Vector3 fall = Vector3.down * 9.8f * Time.deltaTime;
         player.transform.Translate(fall);    
     }
+
+
+
+    Vector2 SquareToCircle(Vector2 input)
+    {
+
+        return (input.sqrMagnitude >= 1f) ? input.normalized : input;
+    }
+
 }

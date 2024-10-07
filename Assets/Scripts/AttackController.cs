@@ -28,7 +28,12 @@ public class AttackController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 mousePos = Input.mousePosition;
-                Instantiate(bulletPrefab, new Vector3(0,1.5f,0), Quaternion.identity);
+                RaycastHit hit;
+                if (Physics.Raycast(cameraController.target1.transform.position, cameraController.target1.transform.forward, out hit))
+                {
+                    print(hit);
+                }
+                Instantiate(bulletPrefab, camera.target1.transform.position, Quaternion.identity);
                 
             }
         }
