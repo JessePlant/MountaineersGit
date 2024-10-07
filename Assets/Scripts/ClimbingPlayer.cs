@@ -13,6 +13,8 @@ public class ClimbingPlayer : MonoBehaviour
     public PlayerState state = PlayerState.CLIMBING;
     float walkSpeed = 3f;
     float climbSpeed = 2f;
+    public float rotationSpeed = 120.0f; // Set player's rotation speed.
+
 
     Rigidbody rb;
 
@@ -28,6 +30,8 @@ public class ClimbingPlayer : MonoBehaviour
 
     void FixedUpdate()
     {
+        Debug.Log("Player is " + state);
+
         float moveVertical = Input.GetAxis("Vertical");
         float moveHorizontal = Input.GetAxis("Horizontal");
 
@@ -51,35 +55,25 @@ public class ClimbingPlayer : MonoBehaviour
             default:
                 break;
         }
-
-        // Player is walking if there is a surface 0.2f below
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.2f))
-        {
-            state = PlayerState.WALKING;
-        }
-        else if (state == PlayerState.WALKING)
-        {
-            state = PlayerState.FALLING;
-        }
         rb.useGravity = state != PlayerState.CLIMBING;
     }
 
     void HandleWalking(Vector3 moveDirection)
     {
-        Vector3 oldVelocity = rb.velocity;
-        Vector3 newVelocity = moveDirection * walkSpeed;
-        newVelocity.y = oldVelocity.y;
+        // Move player based on vertical input.
+        float moveVertical = Input.GetAxis("Vertical");
+        Vector3 movement = transform.forward * moveVertical * walkSpeed * Time.fixedDeltaTime;
+        rb.MovePosition(rb.position + movement);
 
-        rb.velocity = newVelocity;
-        if (moveDirection.sqrMagnitude > 0.01f)
-        {
-            transform.forward = moveDirection;
-        }
+        // Rotate player based on horizontal input.
+        float turn = Input.GetAxis("Horizontal") * rotationSpeed * Time.fixedDeltaTime;
+        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
+        rb.MoveRotation(rb.rotation * turnRotation);
     }
 
     void HandleFalling()
     {
-        if (/*jumpDown &&*/ Physics.Raycast(transform.position,
+        if (/*jumpDown &&*/ false &&  Physics.Raycast(transform.position,
                                         transform.forward * 0.4f))
             state = PlayerState.CLIMBING;
     }
@@ -92,10 +86,9 @@ public class ClimbingPlayer : MonoBehaviour
         int k = 0;
         for (int i = 0; i < 4; i++)
         {
-            RaycastHit checkHit;
             if (Physics.Raycast(transform.position + offset,
                                 transform.forward,
-                                out checkHit))
+                                out RaycastHit checkHit))
             {
                 checkDirection += checkHit.normal;
                 k++;

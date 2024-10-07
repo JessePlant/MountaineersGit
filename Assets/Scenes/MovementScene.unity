@@ -292,6 +292,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1778448940}
+    - target: {fileID: 4244645733404143007, guid: 930a08598b14c9c4fb949c6fff3b2edb, type: 3}
+      propertyPath: m_VersionIndex
+      value: 86
+      objectReference: {fileID: 0}
     - target: {fileID: 7853796037200857559, guid: 930a08598b14c9c4fb949c6fff3b2edb, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -521,8 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 2
-  walkSpeed: 3
-  climbSpeed: 2
+  rotationSpeed: 120
 --- !u!65 &1394899136
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -603,7 +606,7 @@ Transform:
   m_GameObject: {fileID: 1394899134}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.388, y: 0.25, z: -13.119}
+  m_LocalPosition: {x: -0.388, y: 0.15, z: -13.119}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
