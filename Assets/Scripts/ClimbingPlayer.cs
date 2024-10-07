@@ -10,14 +10,11 @@ public class ClimbingPlayer : MonoBehaviour
         FALLING,
         CLIMBING
     }
-    [SerializeField] public PlayerState state = PlayerState.CLIMBING;
-    [SerializeField] float walkSpeed = 3f;
-    [SerializeField] float climbSpeed = 2f;
+    public PlayerState state = PlayerState.CLIMBING;
+    float walkSpeed = 3f;
+    float climbSpeed = 2f;
 
     Rigidbody rb;
-
-    float h = 0f;
-    float v = 0f;
 
     void Start()
     {
@@ -26,51 +23,54 @@ public class ClimbingPlayer : MonoBehaviour
 
     void Update()
     {
-        // Input happens per-frame not in the Physics Loop
-        h = Input.GetAxis("Horizontal");
-        v = Input.GetAxis("Vertical");
+
     }
 
     void FixedUpdate()
     {
-        Vector2 input = Normalize(new Vector2(h, v));
-        Transform cam = Camera.main.transform;
-        Vector3 moveDirection = Quaternion.FromToRotation(cam.up, Vector3.up)
-                                * cam.TransformDirection(new Vector3(input.x, 0f, input.y));
+        float moveVertical = Input.GetAxis("Vertical");
+        float moveHorizontal = Input.GetAxis("Horizontal");
+
+        Vector2 move = new Vector2(moveHorizontal, moveVertical);
+        move = (move.sqrMagnitude >= 1f) ? move.normalized : move;
+
+        Transform camera = Camera.main.transform;
+        Vector3 moveDirection = Quaternion.FromToRotation(camera.up, Vector3.up) * camera.TransformDirection(new Vector3(move.x, 0f, move.y));
 
         switch (state)
         {
-            case PlayerState.WALKING: { HandleWalking(moveDirection); } break;
-            case PlayerState.FALLING: { HandleFalling(); } break;
-            case PlayerState.CLIMBING: { HandleClimbing(input); } break;
+            case PlayerState.WALKING:
+                HandleWalking(moveDirection);
+                break;
+            case PlayerState.FALLING:
+                HandleFalling();
+                break;
+            case PlayerState.CLIMBING:
+                HandleClimbing(move);
+                break;
+            default:
+                break;
         }
 
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position,
-                            Vector3.down,
-                            out hit,
-                            0.2f))
+        // Player is walking if there is a surface 0.2f below
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.2f))
+        {
             state = PlayerState.WALKING;
+        }
         else if (state == PlayerState.WALKING)
+        {
             state = PlayerState.FALLING;
-
+        }
         rb.useGravity = state != PlayerState.CLIMBING;
-
-    
     }
 
     void HandleWalking(Vector3 moveDirection)
     {
-        Vector3 oldVelo = rb.velocity;
-        Vector3 newVelo = moveDirection * walkSpeed;
-        newVelo.y = oldVelo.y;
-        //if (jumpDown)
-        //{
-        //    newVelo.y = 5f;
-        //    state = PlayerState.FALLING;
-        //}
-        rb.velocity = newVelo;
+        Vector3 oldVelocity = rb.velocity;
+        Vector3 newVelocity = moveDirection * walkSpeed;
+        newVelocity.y = oldVelocity.y;
 
+        rb.velocity = newVelocity;
         if (moveDirection.sqrMagnitude > 0.01f)
         {
             transform.forward = moveDirection;
@@ -111,12 +111,9 @@ public class ClimbingPlayer : MonoBehaviour
         {
             float dot = Vector3.Dot(transform.forward, -hit.normal);
 
-            rb.position = Vector3.Lerp(rb.position,
-                                        hit.point + hit.normal * 0.25f,
-                                        5f * Time.fixedDeltaTime);
-            transform.forward = Vector3.Lerp(transform.forward,
-                                            -hit.normal,
-                                            10f * Time.fixedDeltaTime);
+            // Move slight away from the wall by 0.25f * hit.normal
+            rb.position = Vector3.Lerp(rb.position, hit.point + hit.normal * 0.25f, 5f * Time.fixedDeltaTime);
+            transform.forward = Vector3.Lerp(transform.forward, -hit.normal, 10f * Time.fixedDeltaTime);
 
             rb.useGravity = false;
             rb.velocity = transform.TransformDirection(input) * climbSpeed;
@@ -130,10 +127,5 @@ public class ClimbingPlayer : MonoBehaviour
         {
             state = PlayerState.FALLING;
         }
-    }
-
-    Vector2 Normalize(Vector2 input)
-    {
-        return (input.sqrMagnitude >= 1f) ? input.normalized : input;
     }
 }
