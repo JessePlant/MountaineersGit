@@ -8,12 +8,12 @@ public class ClimbingPlayer : MonoBehaviour
     {
         WALKING,
         FALLING,
-        CLIMBING
+        CLIMBING,
+        RESTING
     }
-    public PlayerState state = PlayerState.CLIMBING;
-    float walkSpeed = 3f;
-    float climbSpeed = 2f;
 
+    public PlayerState state = PlayerState.CLIMBING;
+    float climbSpeed = 2f;
     Rigidbody rb;
 
     void Start()
@@ -23,7 +23,7 @@ public class ClimbingPlayer : MonoBehaviour
 
     void Update()
     {
-
+        // You may want to add logic here to change the state based on input or other conditions
     }
 
     void FixedUpdate()
@@ -39,63 +39,42 @@ public class ClimbingPlayer : MonoBehaviour
 
         switch (state)
         {
-            case PlayerState.WALKING:
-                HandleWalking(moveDirection);
-                break;
             case PlayerState.FALLING:
                 HandleFalling();
                 break;
             case PlayerState.CLIMBING:
                 HandleClimbing(move);
                 break;
+            case PlayerState.RESTING:
+                // Ensure the player stops moving
+                rb.velocity = Vector3.zero; // Stop all movement
+                break;
             default:
                 break;
         }
 
-        // Player is walking if there is a surface 0.2f below
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.2f))
-        {
-            state = PlayerState.WALKING;
-        }
-        else if (state == PlayerState.WALKING)
-        {
-            state = PlayerState.FALLING;
-        }
-        rb.useGravity = state != PlayerState.CLIMBING;
-    }
-
-    void HandleWalking(Vector3 moveDirection)
-    {
-        Vector3 oldVelocity = rb.velocity;
-        Vector3 newVelocity = moveDirection * walkSpeed;
-        newVelocity.y = oldVelocity.y;
-
-        rb.velocity = newVelocity;
-        if (moveDirection.sqrMagnitude > 0.01f)
-        {
-            transform.forward = moveDirection;
-        }
+        rb.useGravity = state == PlayerState.FALLING;
     }
 
     void HandleFalling()
     {
-        if (/*jumpDown &&*/ Physics.Raycast(transform.position,
-                                        transform.forward * 0.4f))
+        if (false && Physics.Raycast(transform.position, transform.forward * 0.4f))
+        {
             state = PlayerState.CLIMBING;
+        }
     }
 
     void HandleClimbing(Vector2 input)
     {
-        // Check walls in a cross pattern
+        Debug.Log("Player is " + state);
+
         Vector3 offset = transform.TransformDirection(Vector2.one * 0.5f);
         Vector3 checkDirection = Vector3.zero;
         int k = 0;
+
         for (int i = 0; i < 4; i++)
         {
-            RaycastHit checkHit;
-            if (Physics.Raycast(transform.position + offset,
-                                transform.forward,
-                                out checkHit))
+            if (Physics.Raycast(transform.position + offset, transform.forward, out RaycastHit checkHit))
             {
                 checkDirection += checkHit.normal;
                 k++;
@@ -103,29 +82,22 @@ public class ClimbingPlayer : MonoBehaviour
             // Rotate Offset by 90 degrees
             offset = Quaternion.AngleAxis(90f, transform.forward) * offset;
         }
+
         checkDirection /= k;
 
-        // Check wall directly in front
         RaycastHit hit;
         if (Physics.Raycast(transform.position, -checkDirection, out hit))
         {
             float dot = Vector3.Dot(transform.forward, -hit.normal);
-
-            // Move slight away from the wall by 0.25f * hit.normal
             rb.position = Vector3.Lerp(rb.position, hit.point + hit.normal * 0.25f, 5f * Time.fixedDeltaTime);
             transform.forward = Vector3.Lerp(transform.forward, -hit.normal, 10f * Time.fixedDeltaTime);
 
             rb.useGravity = false;
-            rb.velocity = transform.TransformDirection(input) * climbSpeed;
-            //if (jumpDown)
-            //{
-            //    rb.velocity = Vector3.up * 5f + hit.normal * 2f;
-            //    state = PlayerState.FALLING;
-            //}
+            rb.velocity = transform.TransformDirection(input) * climbSpeed; // Set velocity only if climbing
         }
         else
         {
-            state = PlayerState.FALLING;
+            state = PlayerState.RESTING; // Set to RESTING if not climbing
         }
     }
 }
