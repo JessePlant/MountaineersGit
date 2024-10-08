@@ -37,7 +37,7 @@ public class Stamina : MonoBehaviour
     }
 
     // Regenerate stamina
-    private void RegenerateStamina()
+    public void RegenerateStamina()
     {
         if (currentStamina < maximumStamina)
         {

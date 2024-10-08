@@ -21,7 +21,19 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Properties
-    public PlayerState State { get { return state; } set { state = value; } }
+    public PlayerState State { 
+        get { return state; } 
+        set {
+            if (value == PlayerState.RESTING && CanRest)
+            {
+                state = value;
+            } else if (value != PlayerState.RESTING)
+            {
+                state = value;
+            }
+        }
+    }
+    public bool CanRest { get; set; }
     #endregion
 
     // Use this for initialization
@@ -29,6 +41,7 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         stamina = GetComponent<Stamina>();
+        CanRest = false;
     }
 
     // Update is called once per frame
@@ -37,9 +50,12 @@ public class Player : MonoBehaviour
         if (state == PlayerState.RESTING)
         {
             rb.velocity = Vector3.zero;
+            stamina.RegenerateStamina();
         }
 
     }
+
+   
 
     public void SetMoveDirection(Vector2 direction)
     {
@@ -48,8 +64,9 @@ public class Player : MonoBehaviour
 
     public void Move()
     {
+        Debug.Log("Player is " + State);
         // Only move if there's input and no surface below
-        if (moveDirection != Vector2.zero)
+        if (moveDirection != Vector2.zero && State == PlayerState.CLIMBING)
         {
             stamina.ConsumeStamina();
             // Use the previously set moveDirection to move
@@ -88,7 +105,7 @@ public class Player : MonoBehaviour
         {
             // Stop moving if no input
             rb.velocity = Vector3.zero;
-            state = PlayerState.RESTING;
+            //state = PlayerState.RESTING;
             //rb.useGravity = true; // Optionally, re-enable gravity
         }
     }

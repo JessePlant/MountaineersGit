@@ -48,6 +48,19 @@ public class PlayerController : MonoBehaviour
         {
             activePlayer = activePlayer == Gert ? Emily : Gert;
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (Gert.CanRest && Emily.CanRest)
+            {
+                Gert.State = Player.PlayerState.RESTING;
+                Emily.State = Player.PlayerState.RESTING;
+            } else
+            {
+                Gert.State = Player.PlayerState.CLIMBING;
+                Emily.State = Player.PlayerState.CLIMBING;
+            }
+        }
     }
 
     void FixedUpdate()

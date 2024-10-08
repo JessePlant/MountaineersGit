@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - VaultLayer
-  - Vaultable
+  - Rest Platform
+  - Rest Platform Wall
   layers:
   - Default
   - TransparentFX
