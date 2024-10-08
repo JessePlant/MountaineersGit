@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
 
     public void Move()
     {
-        // Only move if there's input
+        // Only move if there's input and no surface below
         if (moveDirection != Vector2.zero)
         {
             stamina.ConsumeStamina();
