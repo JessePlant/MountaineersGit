@@ -10,19 +10,13 @@ public class Bullet : MonoBehaviour
     public float speed = 3.5f;
     public bool isMoving = false;
     Vector3 mousePos;
-
     Vector3 dir;
     // Start is called before the first frame update
     void Start()
     {
-        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
         attackController = GameObject.Find("AttackController").GetComponent<AttackController>();
-        mousePos = Input.mousePosition;
-        Debug.Log("MousePosition"+ mousePos);
-        Debug.Log("Bullet Position"+ transform.position);
-        Vector2 temp = new Vector2(mousePos.x - transform.position.x, mousePos.y - transform.position.y).normalized;
-        dir = new Vector3(temp.x,temp.y,0);
+        dir = calcDirection(cameraController);
     }
 
     // Update is called once per frame
@@ -33,7 +27,7 @@ public class Bullet : MonoBehaviour
     public Vector2 calcDirection(CameraController camera)
     {
         
-        Vector2 direction = new Vector2(attackController.mousePos.x - camera.target1.transform.position.x, attackController.mousePos.y - camera.target1.transform.position.y);
+        Vector3 direction = new Vector3(attackController.worldPos.x - camera.target1.transform.position.x, attackController.worldPos.y - camera.target1.transform.position.y,camera.target1.transform.position.z);
         isMoving = true;
         return direction.normalized;
     }
