@@ -38,11 +38,11 @@ public class CameraController : MonoBehaviour
         }
         if(onGert)
         {
-            Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-5); //NEEDTO redo this as above.
+            Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this as above.
         }
         else
         {
-            Camera.main.transform.position = target2.transform.position + new Vector3(0,0,-5);
+            Camera.main.transform.position = target2.transform.position + new Vector3(0,0,-17);
         }
         //if(target1.transform.position.y >= screenTopY || target2.transform.position.y >= screenTopY)
         //{
