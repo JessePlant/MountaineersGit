@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     #region Data Members
-    private Player activePlayer;
+    public Player activePlayer;
     #endregion
 
     #region Properties 
