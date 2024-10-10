@@ -71,20 +71,10 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    #region Properties
-   
 
-    #endregion
-
-    
 
     #region Unity Methods
-    private void OnValidate()
-    {
-        minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
-        minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
-        minClimbDotProduct = Mathf.Cos(maxClimbAngle * Mathf.Deg2Rad);
-    }
+   
 
     void Awake()
     {
@@ -93,6 +83,14 @@ public class Player : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         OnValidate();
     }
+
+     private void OnValidate()
+    {
+        minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
+        minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
+        minClimbDotProduct = Mathf.Cos(maxClimbAngle * Mathf.Deg2Rad);
+    }
+
 
     void Update()
     {
@@ -113,10 +111,7 @@ public class Player : MonoBehaviour
         }
 
         isJumpRequested |= Input.GetButtonDown("Jump");
-        if (Input.GetButton("Climb"))
-        {
-            isClimbingRequested = !isClimbingRequested;
-        };
+        isClimbingRequested = Input.GetButtonDown("Climb") ? !isClimbingRequested : isClimbingRequested;
         Debug.Log("Desires climbing " + isClimbingRequested);
 
         meshRenderer.material = Climbing ? climbingMaterial : normalMaterial;
