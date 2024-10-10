@@ -5,76 +5,66 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
+    #region Player State Enum
+    /// <summary>
+    /// Represents player's state
+    /// </summary>
+    public enum PlayerState { WALKING, FALLING, CLIMBING, RESTING }
+    #endregion
+
     #region Data Members
 
     #region Serialized: Appear on unity editor
+    [SerializeField] PlayerState playerState = PlayerState.WALKING;
+
     [Header("Player Input")]
-    [SerializeField]
-    Transform playerInputSpace = default;
+    [SerializeField] Transform inputSpace = default; 
 
     [Header("Movement Settings")]
-    [SerializeField, Range(0f, 100f)]
-    float maxSpeed = 10f, maxClimbSpeed = 4f;
-
-    [SerializeField, Range(0f, 100f)]
-    float maxAcceleration = 10f, maxAirAcceleration = 1f, maxClimbAcceleration = 40f;
+    [SerializeField, Range(0f, 100f)] float maxGroundSpeed = 10f, maxClimbSpeed = 4f; 
+    [SerializeField, Range(0f, 100f)] float groundAcceleration = 10f, maxAirAcceleration = 1f, maxClimbAcceleration = 40f;
 
     [Header("Jump Settings")]
-    [SerializeField, Range(0f, 10f)]
-    float jumpHeight = 2f;
-
-    [SerializeField, Range(0, 5)]
-    int maxAirJumps = 0;
+    [SerializeField, Range(0f, 10f)] float jumpHeight = 2f;
+    [SerializeField, Range(0, 5)] int maxAirJumps = 0;
 
     [Header("Angle Settings")]
-    [SerializeField, Range(0, 90)]
-    float maxGroundAngle = 25f, maxStairsAngle = 50f;
-
-    [SerializeField, Range(90, 170)]
-    float maxClimbAngle = 140f;
+    [SerializeField, Range(0, 90)] float maxGroundAngle = 25f, maxStairsAngle = 50f;
+    [SerializeField, Range(90, 170)] float maxClimbAngle = 140f;
 
     [Header("Snap Settings")]
-    [SerializeField, Range(0f, 100f)]
-    float maxSnapSpeed = 100f;
+    [SerializeField, Range(0f, 100f)] float maxSnapSpeed = 100f;
 
-    [Header("Probe Settings")]
-    [SerializeField, Min(0f)]
-    float probeDistance = 1f;
-
-    [SerializeField]
-    LayerMask probeMask = -1, stairsMask = -1, climbMask = -1;
+    [Header("Layer Mask Settings")]
+    [SerializeField, Min(0f)] float probeDistance = 1f;
+    [SerializeField] LayerMask probeMask = -1, stairsMask = -1, climbMask = -1;
 
     [Header("Materials")]
-    [SerializeField]
-    Material normalMaterial = default;
-    [SerializeField]
-    Material climbingMaterial = default;
+    [SerializeField] Material normalMaterial = default;
+    [SerializeField] Material climbingMaterial = default;
 
     #endregion
 
     #region Non-serialized: Appear on unity editor
-    Rigidbody body, connectedBody, previousConnectedBody;
 
-    Vector2 playerInput;
+    private Rigidbody playerRigidbody, connectedRigidbody, previousConnectedRigidbody; 
+    private Vector2 movementInput;
+    private Vector3 playerVelocity, connectionVelocity;
+    private Vector3 connectionWorldPosition, connectionLocalPosition;
 
-    Vector3 velocity, connectionVelocity;
-    Vector3 connectionWorldPosition, connectionLocalPosition;
+    private Vector3 upAxis, rightAxis, forwardAxis;
+    private bool isJumpRequested, isClimbingRequested;
 
-    Vector3 upAxis, rightAxis, forwardAxis;
+    private Vector3 contactNormal, steepNormal, climbNormal, lastClimbNormal;
+    private int groundContactCount, steepContactCount, climbContactCount;
 
-    bool desiredJump, desiresClimbing;
+    private bool OnGround => groundContactCount > 0;
+    private bool OnSteep => steepContactCount > 0;
+    private bool Climbing => climbContactCount > 0 && stepsSinceLastJump > 2;
 
-    Vector3 contactNormal, steepNormal, climbNormal, lastClimbNormal;
-
-    int groundContactCount, steepContactCount, climbContactCount;
-
-    bool OnGround => groundContactCount > 0;
-    bool OnSteep => steepContactCount > 0;
-    bool Climbing => climbContactCount > 0 && stepsSinceLastJump > 2;
-
-    int jumpPhase;
-    float minGroundDotProduct, minStairsDotProduct, minClimbDotProduct;
-    int stepsSinceLastGrounded, stepsSinceLastJump;
+    private int jumpPhase, stepsSinceLastGrounded, stepsSinceLastJump;
+    private float minGroundDotProduct, minStairsDotProduct, minClimbDotProduct;
+    
 
     MeshRenderer meshRenderer;
     #endregion
@@ -82,12 +72,11 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Properties
+   
 
     #endregion
 
-    #region Player State Enum
-    public enum PlayerState { FALLING, CLIMBING, RESTING }
-    #endregion
+    
 
     #region Unity Methods
     private void OnValidate()
@@ -99,23 +88,23 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        body = GetComponent<Rigidbody>();
-        body.useGravity = false;
+        playerRigidbody = GetComponent<Rigidbody>();
+        playerRigidbody.useGravity = false;
         meshRenderer = GetComponent<MeshRenderer>();
         OnValidate();
     }
 
     void Update()
     {
-        playerInput.x = Input.GetAxis("Horizontal");
-        playerInput.y = Input.GetAxis("Vertical");
-        playerInput = Vector2.ClampMagnitude(playerInput, 1f);
+        movementInput.x = Input.GetAxis("Horizontal");
+        movementInput.y = Input.GetAxis("Vertical");
+        movementInput = Vector2.ClampMagnitude(movementInput, 1f);
 
-        if (playerInputSpace)
+        if (inputSpace)
         {
-            rightAxis = ProjectDirectionOnPlane(playerInputSpace.right, upAxis);
+            rightAxis = ProjectDirectionOnPlane(inputSpace.right, upAxis);
             forwardAxis =
-                ProjectDirectionOnPlane(playerInputSpace.forward, upAxis);
+                ProjectDirectionOnPlane(inputSpace.forward, upAxis);
         }
         else
         {
@@ -123,46 +112,50 @@ public class Player : MonoBehaviour
             forwardAxis = ProjectDirectionOnPlane(Vector3.forward, upAxis);
         }
 
-        desiredJump |= Input.GetButtonDown("Jump");
-        desiresClimbing = Input.GetButton("Climb");
+        isJumpRequested |= Input.GetButtonDown("Jump");
+        if (Input.GetButton("Climb"))
+        {
+            isClimbingRequested = !isClimbingRequested;
+        };
+        Debug.Log("Desires climbing " + isClimbingRequested);
 
         meshRenderer.material = Climbing ? climbingMaterial : normalMaterial;
     }
 
     void FixedUpdate()
     {
-        Vector3 gravity = CustomGravity.GetGravity(body.position, out upAxis);
+        Vector3 gravity = CustomGravity.GetGravity(playerRigidbody.position, out upAxis);
         UpdateState();
         AdjustVelocity();
 
-        if (desiredJump)
+        if (isJumpRequested)
         {
-            desiredJump = false;
+            isJumpRequested = false;
             Jump(gravity);
         }
 
         if (Climbing)
         {
-            velocity -=
+            playerVelocity -=
                 contactNormal * (maxClimbAcceleration * 0.9f * Time.deltaTime);
         }
-        else if (OnGround && velocity.sqrMagnitude < 0.01f)
+        else if (OnGround && playerVelocity.sqrMagnitude < 0.01f)
         {
-            velocity +=
+            playerVelocity +=
                 contactNormal *
                 (Vector3.Dot(gravity, contactNormal) * Time.deltaTime);
         }
-        else if (desiresClimbing && OnGround)
+        else if (isClimbingRequested && OnGround)
         {
-            velocity +=
+            playerVelocity +=
                 (gravity - contactNormal * (maxClimbAcceleration * 0.9f)) *
                 Time.deltaTime;
         }
         else
         {
-            velocity += gravity * Time.deltaTime;
+            playerVelocity += gravity * Time.deltaTime;
         }
-        body.velocity = velocity;
+        playerRigidbody.velocity = playerVelocity;
         ClearState();
     }
 
@@ -171,15 +164,15 @@ public class Player : MonoBehaviour
         groundContactCount = steepContactCount = climbContactCount = 0;
         contactNormal = steepNormal = climbNormal = Vector3.zero;
         connectionVelocity = Vector3.zero;
-        previousConnectedBody = connectedBody;
-        connectedBody = null;
+        previousConnectedRigidbody = connectedRigidbody;
+        connectedRigidbody = null;
     }
 
     void UpdateState()
     {
         stepsSinceLastGrounded += 1;
         stepsSinceLastJump += 1;
-        velocity = body.velocity;
+        playerVelocity = playerRigidbody.velocity;
         if (
             CheckClimbing() || OnGround || SnapToGround() || CheckSteepContacts()
         )
@@ -199,9 +192,9 @@ public class Player : MonoBehaviour
             contactNormal = upAxis;
         }
 
-        if (connectedBody)
+        if (connectedRigidbody)
         {
-            if (connectedBody.isKinematic || connectedBody.mass >= body.mass)
+            if (connectedRigidbody.isKinematic || connectedRigidbody.mass >= playerRigidbody.mass)
             {
                 UpdateConnectionState();
             }
@@ -210,15 +203,15 @@ public class Player : MonoBehaviour
 
     void UpdateConnectionState()
     {
-        if (connectedBody == previousConnectedBody)
+        if (connectedRigidbody == previousConnectedRigidbody)
         {
             Vector3 connectionMovement =
-                connectedBody.transform.TransformPoint(connectionLocalPosition) -
+                connectedRigidbody.transform.TransformPoint(connectionLocalPosition) -
                 connectionWorldPosition;
             connectionVelocity = connectionMovement / Time.deltaTime;
         }
-        connectionWorldPosition = body.position;
-        connectionLocalPosition = connectedBody.transform.InverseTransformPoint(
+        connectionWorldPosition = playerRigidbody.position;
+        connectionLocalPosition = connectedRigidbody.transform.InverseTransformPoint(
             connectionWorldPosition
         );
     }
@@ -249,13 +242,13 @@ public class Player : MonoBehaviour
         {
             return false;
         }
-        float speed = velocity.magnitude;
+        float speed = playerVelocity.magnitude;
         if (speed > maxSnapSpeed)
         {
             return false;
         }
         if (!Physics.Raycast(
-            body.position, -upAxis, out RaycastHit hit,
+            playerRigidbody.position, -upAxis, out RaycastHit hit,
             probeDistance, probeMask
         ))
         {
@@ -270,12 +263,12 @@ public class Player : MonoBehaviour
 
         groundContactCount = 1;
         contactNormal = hit.normal;
-        float dot = Vector3.Dot(velocity, hit.normal);
+        float dot = Vector3.Dot(playerVelocity, hit.normal);
         if (dot > 0f)
         {
-            velocity = (velocity - hit.normal * dot).normalized * speed;
+            playerVelocity = (playerVelocity - hit.normal * dot).normalized * speed;
         }
-        connectedBody = hit.rigidbody;
+        connectedRigidbody = hit.rigidbody;
         return true;
     }
 
@@ -309,26 +302,26 @@ public class Player : MonoBehaviour
         }
         else
         {
-            acceleration = OnGround ? maxAcceleration : maxAirAcceleration;
-            speed = OnGround && desiresClimbing ? maxClimbSpeed : maxSpeed;
+            acceleration = OnGround ? groundAcceleration : maxAirAcceleration;
+            speed = OnGround && isClimbingRequested ? maxClimbSpeed : maxGroundSpeed;
             xAxis = rightAxis;
             zAxis = forwardAxis;
         }
         xAxis = ProjectDirectionOnPlane(xAxis, contactNormal);
         zAxis = ProjectDirectionOnPlane(zAxis, contactNormal);
 
-        Vector3 relativeVelocity = velocity - connectionVelocity;
+        Vector3 relativeVelocity = playerVelocity - connectionVelocity;
         float currentX = Vector3.Dot(relativeVelocity, xAxis);
         float currentZ = Vector3.Dot(relativeVelocity, zAxis);
 
-        float maxSpeedChange = acceleration * Time.deltaTime;
+        float maxGroundSpeedChange = acceleration * Time.deltaTime;
 
         float newX =
-            Mathf.MoveTowards(currentX, playerInput.x * speed, maxSpeedChange);
+            Mathf.MoveTowards(currentX, movementInput.x * speed, maxGroundSpeedChange);
         float newZ =
-            Mathf.MoveTowards(currentZ, playerInput.y * speed, maxSpeedChange);
+            Mathf.MoveTowards(currentZ, movementInput.y * speed, maxGroundSpeedChange);
 
-        velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
+        playerVelocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
     }
 
     void Jump(Vector3 gravity)
@@ -360,12 +353,12 @@ public class Player : MonoBehaviour
         jumpPhase += 1;
         float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
         jumpDirection = (jumpDirection + upAxis).normalized;
-        float alignedSpeed = Vector3.Dot(velocity, jumpDirection);
+        float alignedSpeed = Vector3.Dot(playerVelocity, jumpDirection);
         if (alignedSpeed > 0f)
         {
             jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
         }
-        velocity += jumpDirection * jumpSpeed;
+        playerVelocity += jumpDirection * jumpSpeed;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -390,7 +383,7 @@ public class Player : MonoBehaviour
             {
                 groundContactCount += 1;
                 contactNormal += normal;
-                connectedBody = collision.rigidbody;
+                connectedRigidbody = collision.rigidbody;
             }
             else
             {
@@ -400,18 +393,18 @@ public class Player : MonoBehaviour
                     steepNormal += normal;
                     if (groundContactCount == 0)
                     {
-                        connectedBody = collision.rigidbody;
+                        connectedRigidbody = collision.rigidbody;
                     }
                 }
                 if (
-                    desiresClimbing && upDot >= minClimbDotProduct &&
+                    isClimbingRequested && upDot >= minClimbDotProduct &&
                     (climbMask & (1 << layer)) != 0
                 )
                 {
                     climbContactCount += 1;
                     climbNormal += normal;
                     lastClimbNormal = normal;
-                    connectedBody = collision.rigidbody;
+                    connectedRigidbody = collision.rigidbody;
                 }
             }
         }
@@ -431,4 +424,7 @@ public class Player : MonoBehaviour
 
     #endregion
 
+
+    #region Other Methods
+    #endregion
 }
