@@ -10,16 +10,21 @@ public class PlayerController : MonoBehaviour
     private Vector2 playerMovement;
     private bool isJumpRequested;
     private bool isClimbRequested;
+
+    private GameObject playerGamrObject;
     #endregion
 
     #region Properties 
     private Player Gert { get; set; }
     private Player Emily {  get; set; }
+ 
     #endregion
 
     // Start is called before the first frame update
     void Start() 
-    { 
+    {
+
+        playerGamrObject = GameObject.Find("Player");
         Gert = GameObject.Find("Gert").GetComponent<Player>();
         Emily = GameObject.Find("Emily").GetComponent<Player>();
         activePlayer = Gert;
@@ -37,14 +42,25 @@ public class PlayerController : MonoBehaviour
         playerMovement = new Vector2(moveHorizontal, moveVertical);
         playerMovement = Vector2.ClampMagnitude(playerMovement, 1f);
 
-        isJumpRequested |= Input.GetButtonDown("Jump");
+        isJumpRequested = Input.GetButtonDown("Jump");
         isClimbRequested = Input.GetButtonDown("Climb") ? !isClimbRequested : isClimbRequested;
 
         // update climbing state same time
         Gert.SetClimbing(isClimbRequested);
         Emily.SetClimbing(isClimbRequested);
 
-        activePlayer.MovePlayer(playerMovement,isJumpRequested);
+
+        if (Gert.PhysicalState.IsAlive && Emily.PhysicalState.IsAlive) 
+        {
+            activePlayer.MovePlayer(playerMovement, isJumpRequested);
+        }
+        else
+        {
+            Destroy(Gert.gameObject);
+            Destroy(Emily.gameObject);
+            Destroy(playerGamrObject);
+        }
+
 
 
         //// Detect player switching

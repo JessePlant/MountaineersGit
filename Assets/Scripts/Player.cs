@@ -5,17 +5,18 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    #region Player State Enum
-    /// <summary>
-    /// Represents player's state
-    /// </summary>
-    public enum PlayerState { WALKING, FALLING, CLIMBING, RESTING }
-    #endregion
+   public enum PlayerState
+   {
+        CLIMBING,
+        RESTING,
+        FALLING,
+        DEAD
+   }
 
     #region Data Members
 
     #region Serialized: Appear on unity editor
-    [SerializeField] PlayerState playerState = PlayerState.WALKING;
+    [SerializeField] PlayerState playerState = PlayerState.CLIMBING;
 
     [Header("Player Input")]
     [SerializeField] Transform inputSpace = default; 
@@ -64,7 +65,8 @@ public class Player : MonoBehaviour
 
     private int jumpPhase, stepsSinceLastGrounded, stepsSinceLastJump;
     private float minGroundDotProduct, minStairsDotProduct, minClimbDotProduct;
-    
+
+    private PhysicalState physicalState;
 
     MeshRenderer meshRenderer;
     #endregion
@@ -72,13 +74,27 @@ public class Player : MonoBehaviour
     #endregion
 
 
+    #region Properties 
+    public PlayerState State
+    {
+        get { return playerState; }
+        set { playerState = value; }
+    }
+
+    public PhysicalState PhysicalState
+    {
+        get { return physicalState; }
+    }
+
+    #endregion
 
     #region Unity Methods
-   
+
 
     void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody>();
+        physicalState = GetComponent<PhysicalState>();
         playerRigidbody.useGravity = false;
         meshRenderer = GetComponent<MeshRenderer>();
         OnValidate();
@@ -113,7 +129,7 @@ public class Player : MonoBehaviour
             forwardAxis = ProjectDirectionOnPlane(Vector3.forward, upAxis);
         }
 
-        isJumpRequested = jump;
+        isJumpRequested |= jump;
         isClimbingRequested = Input.GetButtonDown("Climb") ? !isClimbingRequested : isClimbingRequested;
 
     }
@@ -121,6 +137,16 @@ public class Player : MonoBehaviour
     void Update()
     {
         meshRenderer.material = Climbing ? climbingMaterial : normalMaterial;
+        if (physicalState.IsOutOfStamina && !OnGround)
+        {
+            playerState = PlayerState.FALLING;
+        }
+
+        if (playerState == PlayerState.FALLING && OnGround)
+        {
+            playerState = PlayerState.DEAD;
+        }
+
     }
 
     void FixedUpdate()
@@ -151,6 +177,7 @@ public class Player : MonoBehaviour
             playerVelocity +=
                 (gravity - contactNormal * (maxClimbAcceleration * 0.9f)) *
                 Time.deltaTime;
+            Debug.Log("On Ground");
         }
         else
         {
@@ -158,6 +185,13 @@ public class Player : MonoBehaviour
         }
         playerRigidbody.velocity = playerVelocity;
         ClearState();
+
+        if (movementInput != Vector2.zero)
+        {
+            physicalState.ConsumeStamina();
+        }
+
+        isClimbingRequested &= !physicalState.IsOutOfStamina;
     }
 
     void ClearState()
