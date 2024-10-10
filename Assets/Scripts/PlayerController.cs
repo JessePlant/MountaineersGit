@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     #region Data Members
-    public Player activePlayer;
+    private Player activePlayer;
 
     private Vector2 playerMovement;
     private bool isJumpRequested;
@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     #region Properties 
     private Player Gert { get; set; }
-    private Player Emily {  get; set; }
+    private Player Emily { get; set; }
  
     #endregion
 
