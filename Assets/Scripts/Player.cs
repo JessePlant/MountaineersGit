@@ -4,7 +4,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public enum PlayerState { FALLING, CLIMBING, RESTING }
-
+    public Guns selectedGun;
+    
     #region Data Members
     public PlayerState state = PlayerState.CLIMBING;
     public float climbSpeed = 1.0f;

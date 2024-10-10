@@ -12,13 +12,14 @@ public class PlayerController : MonoBehaviour
     private Player Gert { get; set; }
     private Player Emily {  get; set; }
     #endregion
-
+    public EnemyBehaviour enemyBehaviour;
     // Start is called before the first frame update
     void Start() 
     { 
         Gert = GameObject.Find("Gert").GetComponent<Player>();
         Emily = GameObject.Find("Emily").GetComponent<Player>();
         activePlayer = Gert;
+        enemyBehaviour = GameObject.Find("Enemy").GetComponent<EnemyBehaviour>();
 
     }
 
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Detect movement input in Update
+        if(!enemyBehaviour.alreadyAttacked){
         float moveVertical = Input.GetAxis("Vertical");
         float moveHorizontal = Input.GetAxis("Horizontal");
 
@@ -61,6 +63,7 @@ public class PlayerController : MonoBehaviour
                 Emily.State = Player.PlayerState.CLIMBING;
             }
         }
+    }
     }
 
     void FixedUpdate()
