@@ -92,11 +92,14 @@ public class Player : MonoBehaviour
     }
 
 
-    void Update()
+    public void SetClimbing(bool climbing)
     {
-        movementInput.x = Input.GetAxis("Horizontal");
-        movementInput.y = Input.GetAxis("Vertical");
-        movementInput = Vector2.ClampMagnitude(movementInput, 1f);
+        isClimbingRequested = climbing;
+    }
+
+    public void MovePlayer(Vector2 movement, bool jump)
+    {
+        movementInput = movement;
 
         if (inputSpace)
         {
@@ -110,10 +113,13 @@ public class Player : MonoBehaviour
             forwardAxis = ProjectDirectionOnPlane(Vector3.forward, upAxis);
         }
 
-        isJumpRequested |= Input.GetButtonDown("Jump");
+        isJumpRequested = jump;
         isClimbingRequested = Input.GetButtonDown("Climb") ? !isClimbingRequested : isClimbingRequested;
-        Debug.Log("Desires climbing " + isClimbingRequested);
 
+    }
+
+    void Update()
+    {
         meshRenderer.material = Climbing ? climbingMaterial : normalMaterial;
     }
 

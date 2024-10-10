@@ -6,6 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     #region Data Members
     public Player activePlayer;
+
+    private Vector2 playerMovement;
+    private bool isJumpRequested;
+    private bool isClimbRequested;
     #endregion
 
     #region Properties 
@@ -26,28 +30,28 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //// Detect movement input in Update
-        //float moveVertical = Input.GetAxis("Vertical");
-        //float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+        float moveHorizontal = Input.GetAxis("Horizontal");
 
-        //// Combine input for movement direction
-        //Vector2 move = new Vector2(moveHorizontal, moveVertical);
+        // Combine input for movement direction
+        playerMovement = new Vector2(moveHorizontal, moveVertical);
+        playerMovement = Vector2.ClampMagnitude(playerMovement, 1f);
 
-        //// Only proceed if there is movement input
-        //if (move.sqrMagnitude > 0.01f)
-        //{
-        //    move = (move.sqrMagnitude >= 1f) ? move.normalized : move;
-        //    activePlayer.SetMoveDirection(move); // Set movement direction for FixedUpdate to process
-        //}
-        //else
-        //{
-        //    activePlayer.SetMoveDirection(Vector2.zero); // Ensure player stops if no input
-        //}
+        isJumpRequested |= Input.GetButtonDown("Jump");
+        isClimbRequested = Input.GetButtonDown("Climb") ? !isClimbRequested : isClimbRequested;
+
+        // update climbing state same time
+        Gert.SetClimbing(isClimbRequested);
+        Emily.SetClimbing(isClimbRequested);
+
+        activePlayer.MovePlayer(playerMovement,isJumpRequested);
+
 
         //// Detect player switching
-        //if (Input.GetKeyDown(KeyCode.Tab))
-        //{
-        //    activePlayer = activePlayer == Gert ? Emily : Gert;
-        //}
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            activePlayer = activePlayer == Gert ? Emily : Gert;
+        }
 
         //if (Input.GetKeyDown(KeyCode.Space))
         //{
@@ -68,6 +72,7 @@ public class PlayerController : MonoBehaviour
         // Move player based on the movement direction set in Update
         //activePlayer.Move();
     }
+
 
 
 }
