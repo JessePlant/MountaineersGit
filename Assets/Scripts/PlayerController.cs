@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
         Emily.SetClimbing(isClimbRequested);
 
 
-        if (Gert.PhysicalState.IsAlive && Emily.PhysicalState.IsAlive) 
+        if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
         {
             activePlayer.MovePlayer(playerMovement, isJumpRequested);
         }
