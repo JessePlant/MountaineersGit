@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
-    public float Ghealth;
-    public float Ehealth;
-    public CameraController cameraController;
+    [SerializeField]
+    public static float Ghealth;
+    public static float Ehealth;
     public float dmg = 25; 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +21,10 @@ public class HealthManager : MonoBehaviour
     {
     }
 
-    public void Playerdmg(String playerName)
+    public void Playerdmg()
     {
-        if (playerName == "Gert")
-        {
-            Ghealth -= dmg;
-        }
-        else
-        {
-            Ehealth -= dmg;
-        }
-        if (Ghealth <= 0 || Ehealth <=0)
-        {
-            Debug.Log("Player is dead");
-        }
+        Ghealth -= 25f;
+        Debug.Log("Gerts Health"+Ghealth);
     }
 
 }

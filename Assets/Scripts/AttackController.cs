@@ -29,7 +29,7 @@ public class AttackController : MonoBehaviour
     public void Shoot(CameraController camera)
     {
         if (camera.onGert)
-
+        print(camera.onGert);
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -45,4 +45,6 @@ public class AttackController : MonoBehaviour
             }
         }
     }
+
+
 }

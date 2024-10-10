@@ -10,7 +10,7 @@ public class EnemyBehaviour : MonoBehaviour
     public NavMeshAgent agent;
     public Transform Gert;
     public float moveSpeed;
-    public float timeBetweenAttacks;
+    public float timeBetweenAttacks = 1f;
     public HealthManager healthManager;
     public bool alreadyAttacked;
     public float attackRange;
@@ -22,7 +22,8 @@ public class EnemyBehaviour : MonoBehaviour
         Gert = GameObject.Find("Gert").GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
         agent.autoTraverseOffMeshLink = true;
-        attackRange = 2f;
+        attackRange = 1f;
+        alreadyAttacked = false;
     }
 
    
@@ -35,27 +36,36 @@ public class EnemyBehaviour : MonoBehaviour
         else Attack();
     }
     public void Chase(){
-        Debug.Log("Chasing");
         agent.SetDestination(Gert.position);
     }
 
     public void Attack(){
-        Debug.Log("Attacking");
+        Debug.Log("Going to Attack");
         agent.SetDestination(transform.position);
         transform.LookAt(Gert);
+        Debug.Log("Already Attacked "+alreadyAttacked);       
         if(!alreadyAttacked){
+            Debug.Log("Attack Commencing");
             alreadyAttacked = true;
-            healthManager.Playerdmg("Gert");
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
+            healthManager.Playerdmg();
+            StartCoroutine(ResetAttack());
         }
     }
-    void ResetAttack(){
+    IEnumerator ResetAttack(){
+    Debug.Log("Coroutine started, waiting for: " + timeBetweenAttacks + " seconds");
+        yield return new WaitForSecondsRealtime(timeBetweenAttacks);
+        Debug.Log("Starting Coroutine");
         alreadyAttacked = false;
     }
+    
     public void TakeDamage(float damage){
         enemyHealth -= damage;
+        print(enemyHealth);
         if(enemyHealth <= 0){
             Destroy(gameObject);
+        }
+        else{
+            agent.SetDestination(transform.position);
         }
     }
 }

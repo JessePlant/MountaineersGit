@@ -13,6 +13,12 @@ public class Bullet : MonoBehaviour
     public bool isMoving = false;
     Vector3 mousePos;
     Vector3 dir;
+    public Vector3 enemyPos;
+    
+    public float damage = 10;
+    public bool didHit; 
+    EnemyBehaviour e;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,12 +26,14 @@ public class Bullet : MonoBehaviour
         gert = GameObject.Find("Gert").GetComponent<Transform>();
         attackController = GameObject.Find("AttackController").GetComponent<AttackController>();
         dir = calcDirection(cameraController);
+        didHit = hitEnemy(gert);
     }
 
     // Update is called once per frame
     void Update()
-    {
-        if(Vector3.Distance(gert.position, transform.position)>10)
+    { 
+        print(enemyPos);
+        if(Vector3.Distance(gert.position, transform.position)>10 || transform.position == enemyPos)
         {
             Destroy(gameObject);
         }
@@ -39,14 +47,26 @@ public class Bullet : MonoBehaviour
         return direction.normalized;
     }
 
-    void OnTriggerEnter(Collider other)
+
+    bool hitEnemy(Transform player)
     {
-        if(other.gameObject.tag == "Enemy")
+        RaycastHit hit;
+        if(Physics.Raycast(player.position,dir, out hit))
         {
-            Destroy(gameObject);
+            e  = hit.transform.GetComponent<EnemyBehaviour>();
+            if(e != null)
+            {
+                print("Taking Damage");
+                return true;
+            }
         }
+        return false;
     }
-
-
-
+    void OnCollisionEnter(Collision collision)
+    {
+        if(didHit){
+            e.TakeDamage(damage);
+        }
+        Destroy(gameObject);
+    }
 }
