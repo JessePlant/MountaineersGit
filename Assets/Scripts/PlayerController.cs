@@ -25,48 +25,48 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Detect movement input in Update
-        float moveVertical = Input.GetAxis("Vertical");
-        float moveHorizontal = Input.GetAxis("Horizontal");
+        //// Detect movement input in Update
+        //float moveVertical = Input.GetAxis("Vertical");
+        //float moveHorizontal = Input.GetAxis("Horizontal");
 
-        // Combine input for movement direction
-        Vector2 move = new Vector2(moveHorizontal, moveVertical);
+        //// Combine input for movement direction
+        //Vector2 move = new Vector2(moveHorizontal, moveVertical);
 
-        // Only proceed if there is movement input
-        if (move.sqrMagnitude > 0.01f)
-        {
-            move = (move.sqrMagnitude >= 1f) ? move.normalized : move;
-            activePlayer.SetMoveDirection(move); // Set movement direction for FixedUpdate to process
-        }
-        else
-        {
-            activePlayer.SetMoveDirection(Vector2.zero); // Ensure player stops if no input
-        }
+        //// Only proceed if there is movement input
+        //if (move.sqrMagnitude > 0.01f)
+        //{
+        //    move = (move.sqrMagnitude >= 1f) ? move.normalized : move;
+        //    activePlayer.SetMoveDirection(move); // Set movement direction for FixedUpdate to process
+        //}
+        //else
+        //{
+        //    activePlayer.SetMoveDirection(Vector2.zero); // Ensure player stops if no input
+        //}
 
-        // Detect player switching
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            activePlayer = activePlayer == Gert ? Emily : Gert;
-        }
+        //// Detect player switching
+        //if (Input.GetKeyDown(KeyCode.Tab))
+        //{
+        //    activePlayer = activePlayer == Gert ? Emily : Gert;
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (Gert.CanRest && Emily.CanRest)
-            {
-                Gert.State = Player.PlayerState.RESTING;
-                Emily.State = Player.PlayerState.RESTING;
-            } else
-            {
-                Gert.State = Player.PlayerState.CLIMBING;
-                Emily.State = Player.PlayerState.CLIMBING;
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    if (Gert.CanRest && Emily.CanRest)
+        //    {
+        //        Gert.State = Player.PlayerState.RESTING;
+        //        Emily.State = Player.PlayerState.RESTING;
+        //    } else
+        //    {
+        //        Gert.State = Player.PlayerState.CLIMBING;
+        //        Emily.State = Player.PlayerState.CLIMBING;
+        //    }
+        //}
     }
 
     void FixedUpdate()
     {
         // Move player based on the movement direction set in Update
-        activePlayer.Move();
+        //activePlayer.Move();
     }
 
 

@@ -1,112 +1,434 @@
-﻿using System.Collections;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public enum PlayerState { FALLING, CLIMBING, RESTING }
 
     #region Data Members
-    public PlayerState state = PlayerState.CLIMBING;
-    public float climbSpeed = 1.0f;
 
-    private Stamina stamina;
-    private Vector2 moveDirection = Vector2.zero; // Store movement direction
+    #region Serialized: Appear on unity editor
+    [Header("Player Input")]
+    [SerializeField]
+    Transform playerInputSpace = default;
 
-    
+    [Header("Movement Settings")]
+    [SerializeField, Range(0f, 100f)]
+    float maxSpeed = 10f, maxClimbSpeed = 4f;
 
-    // Stamina 
+    [SerializeField, Range(0f, 100f)]
+    float maxAcceleration = 10f, maxAirAcceleration = 1f, maxClimbAcceleration = 40f;
 
-    private Rigidbody rb;
+    [Header("Jump Settings")]
+    [SerializeField, Range(0f, 10f)]
+    float jumpHeight = 2f;
+
+    [SerializeField, Range(0, 5)]
+    int maxAirJumps = 0;
+
+    [Header("Angle Settings")]
+    [SerializeField, Range(0, 90)]
+    float maxGroundAngle = 25f, maxStairsAngle = 50f;
+
+    [SerializeField, Range(90, 170)]
+    float maxClimbAngle = 140f;
+
+    [Header("Snap Settings")]
+    [SerializeField, Range(0f, 100f)]
+    float maxSnapSpeed = 100f;
+
+    [Header("Probe Settings")]
+    [SerializeField, Min(0f)]
+    float probeDistance = 1f;
+
+    [SerializeField]
+    LayerMask probeMask = -1, stairsMask = -1, climbMask = -1;
+
+    [Header("Materials")]
+    [SerializeField]
+    Material normalMaterial = default;
+    [SerializeField]
+    Material climbingMaterial = default;
+
+    #endregion
+
+    #region Non-serialized: Appear on unity editor
+    Rigidbody body, connectedBody, previousConnectedBody;
+
+    Vector2 playerInput;
+
+    Vector3 velocity, connectionVelocity;
+    Vector3 connectionWorldPosition, connectionLocalPosition;
+
+    Vector3 upAxis, rightAxis, forwardAxis;
+
+    bool desiredJump, desiresClimbing;
+
+    Vector3 contactNormal, steepNormal, climbNormal, lastClimbNormal;
+
+    int groundContactCount, steepContactCount, climbContactCount;
+
+    bool OnGround => groundContactCount > 0;
+    bool OnSteep => steepContactCount > 0;
+    bool Climbing => climbContactCount > 0 && stepsSinceLastJump > 2;
+
+    int jumpPhase;
+    float minGroundDotProduct, minStairsDotProduct, minClimbDotProduct;
+    int stepsSinceLastGrounded, stepsSinceLastJump;
+
+    MeshRenderer meshRenderer;
+    #endregion
 
     #endregion
 
     #region Properties
-    public PlayerState State { 
-        get { return state; } 
-        set {
-            if (value == PlayerState.RESTING && CanRest)
-            {
-                state = value;
-            } else if (value != PlayerState.RESTING)
-            {
-                state = value;
-            }
-        }
-    }
-    public bool CanRest { get; set; }
+
     #endregion
 
-    // Use this for initialization
-    void Start()
+    #region Player State Enum
+    public enum PlayerState { FALLING, CLIMBING, RESTING }
+    #endregion
+
+    #region Unity Methods
+    private void OnValidate()
     {
-        rb = GetComponent<Rigidbody>();
-        stamina = GetComponent<Stamina>();
-        CanRest = false;
+        minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
+        minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
+        minClimbDotProduct = Mathf.Cos(maxClimbAngle * Mathf.Deg2Rad);
     }
 
-    // Update is called once per frame
+    void Awake()
+    {
+        body = GetComponent<Rigidbody>();
+        body.useGravity = false;
+        meshRenderer = GetComponent<MeshRenderer>();
+        OnValidate();
+    }
+
     void Update()
     {
-        if (state == PlayerState.RESTING)
+        playerInput.x = Input.GetAxis("Horizontal");
+        playerInput.y = Input.GetAxis("Vertical");
+        playerInput = Vector2.ClampMagnitude(playerInput, 1f);
+
+        if (playerInputSpace)
         {
-            rb.velocity = Vector3.zero;
-            stamina.RegenerateStamina();
+            rightAxis = ProjectDirectionOnPlane(playerInputSpace.right, upAxis);
+            forwardAxis =
+                ProjectDirectionOnPlane(playerInputSpace.forward, upAxis);
+        }
+        else
+        {
+            rightAxis = ProjectDirectionOnPlane(Vector3.right, upAxis);
+            forwardAxis = ProjectDirectionOnPlane(Vector3.forward, upAxis);
         }
 
+        desiredJump |= Input.GetButtonDown("Jump");
+        desiresClimbing = Input.GetButton("Climb");
+
+        meshRenderer.material = Climbing ? climbingMaterial : normalMaterial;
     }
 
-   
-
-    public void SetMoveDirection(Vector2 direction)
+    void FixedUpdate()
     {
-        moveDirection = direction; // Set direction for FixedUpdate to use
-    }
+        Vector3 gravity = CustomGravity.GetGravity(body.position, out upAxis);
+        UpdateState();
+        AdjustVelocity();
 
-    public void Move()
-    {
-        Debug.Log("Player is " + State);
-        // Only move if there's input and no surface below
-        if (moveDirection != Vector2.zero && State == PlayerState.CLIMBING)
+        if (desiredJump)
         {
-            stamina.ConsumeStamina();
-            // Use the previously set moveDirection to move
-            Vector3 offset = transform.TransformDirection(Vector2.one * 0.5f);
-            Vector3 checkDirection = Vector3.zero;
-            int k = 0;
+            desiredJump = false;
+            Jump(gravity);
+        }
 
-            // Raycasting logic for climbing or movement
-            for (int i = 0; i < 4; i++)
+        if (Climbing)
+        {
+            velocity -=
+                contactNormal * (maxClimbAcceleration * 0.9f * Time.deltaTime);
+        }
+        else if (OnGround && velocity.sqrMagnitude < 0.01f)
+        {
+            velocity +=
+                contactNormal *
+                (Vector3.Dot(gravity, contactNormal) * Time.deltaTime);
+        }
+        else if (desiresClimbing && OnGround)
+        {
+            velocity +=
+                (gravity - contactNormal * (maxClimbAcceleration * 0.9f)) *
+                Time.deltaTime;
+        }
+        else
+        {
+            velocity += gravity * Time.deltaTime;
+        }
+        body.velocity = velocity;
+        ClearState();
+    }
+
+    void ClearState()
+    {
+        groundContactCount = steepContactCount = climbContactCount = 0;
+        contactNormal = steepNormal = climbNormal = Vector3.zero;
+        connectionVelocity = Vector3.zero;
+        previousConnectedBody = connectedBody;
+        connectedBody = null;
+    }
+
+    void UpdateState()
+    {
+        stepsSinceLastGrounded += 1;
+        stepsSinceLastJump += 1;
+        velocity = body.velocity;
+        if (
+            CheckClimbing() || OnGround || SnapToGround() || CheckSteepContacts()
+        )
+        {
+            stepsSinceLastGrounded = 0;
+            if (stepsSinceLastJump > 1)
             {
-                if (Physics.Raycast(transform.position + offset, transform.forward, out RaycastHit checkHit))
-                {
-                    checkDirection += checkHit.normal;
-                    k++;
-                }
-                offset = Quaternion.AngleAxis(90f, transform.forward) * offset;
+                jumpPhase = 0;
             }
-
-            if (k > 0) { checkDirection /= k; }
-
-            // Perform raycast to find the climbing surface
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, -checkDirection, out hit))
+            if (groundContactCount > 1)
             {
-                // Move and rotate the player towards the hit normal (climbable surface)
-                rb.position = Vector3.Lerp(rb.position, hit.point + hit.normal * 0.25f, 5f * Time.fixedDeltaTime);
-                transform.forward = Vector3.Lerp(transform.forward, -hit.normal, 10f * Time.fixedDeltaTime);
-
-                rb.useGravity = false;
-
-                // Set velocity based on input
-                rb.velocity = transform.TransformDirection(moveDirection) * climbSpeed; // Apply velocity
+                contactNormal.Normalize();
             }
         }
         else
         {
-            // Stop moving if no input
-            rb.velocity = Vector3.zero;
-            //state = PlayerState.RESTING;
-            //rb.useGravity = true; // Optionally, re-enable gravity
+            contactNormal = upAxis;
+        }
+
+        if (connectedBody)
+        {
+            if (connectedBody.isKinematic || connectedBody.mass >= body.mass)
+            {
+                UpdateConnectionState();
+            }
         }
     }
+
+    void UpdateConnectionState()
+    {
+        if (connectedBody == previousConnectedBody)
+        {
+            Vector3 connectionMovement =
+                connectedBody.transform.TransformPoint(connectionLocalPosition) -
+                connectionWorldPosition;
+            connectionVelocity = connectionMovement / Time.deltaTime;
+        }
+        connectionWorldPosition = body.position;
+        connectionLocalPosition = connectedBody.transform.InverseTransformPoint(
+            connectionWorldPosition
+        );
+    }
+
+    bool CheckClimbing()
+    {
+        if (Climbing)
+        {
+            if (climbContactCount > 1)
+            {
+                climbNormal.Normalize();
+                float upDot = Vector3.Dot(upAxis, climbNormal);
+                if (upDot >= minGroundDotProduct)
+                {
+                    climbNormal = lastClimbNormal;
+                }
+            }
+            groundContactCount = 1;
+            contactNormal = climbNormal;
+            return true;
+        }
+        return false;
+    }
+
+    bool SnapToGround()
+    {
+        if (stepsSinceLastGrounded > 1 || stepsSinceLastJump <= 2)
+        {
+            return false;
+        }
+        float speed = velocity.magnitude;
+        if (speed > maxSnapSpeed)
+        {
+            return false;
+        }
+        if (!Physics.Raycast(
+            body.position, -upAxis, out RaycastHit hit,
+            probeDistance, probeMask
+        ))
+        {
+            return false;
+        }
+
+        float upDot = Vector3.Dot(upAxis, hit.normal);
+        if (upDot < GetMinDot(hit.collider.gameObject.layer))
+        {
+            return false;
+        }
+
+        groundContactCount = 1;
+        contactNormal = hit.normal;
+        float dot = Vector3.Dot(velocity, hit.normal);
+        if (dot > 0f)
+        {
+            velocity = (velocity - hit.normal * dot).normalized * speed;
+        }
+        connectedBody = hit.rigidbody;
+        return true;
+    }
+
+    bool CheckSteepContacts()
+    {
+        if (steepContactCount > 1)
+        {
+            steepNormal.Normalize();
+            float upDot = Vector3.Dot(upAxis, steepNormal);
+            if (upDot >= minGroundDotProduct)
+            {
+                steepContactCount = 0;
+                groundContactCount = 1;
+                contactNormal = steepNormal;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void AdjustVelocity()
+    {
+        float acceleration, speed;
+        Vector3 xAxis, zAxis;
+        if (Climbing)
+        {
+            acceleration = maxClimbAcceleration;
+            speed = maxClimbSpeed;
+            xAxis = Vector3.Cross(contactNormal, upAxis);
+            zAxis = upAxis;
+        }
+        else
+        {
+            acceleration = OnGround ? maxAcceleration : maxAirAcceleration;
+            speed = OnGround && desiresClimbing ? maxClimbSpeed : maxSpeed;
+            xAxis = rightAxis;
+            zAxis = forwardAxis;
+        }
+        xAxis = ProjectDirectionOnPlane(xAxis, contactNormal);
+        zAxis = ProjectDirectionOnPlane(zAxis, contactNormal);
+
+        Vector3 relativeVelocity = velocity - connectionVelocity;
+        float currentX = Vector3.Dot(relativeVelocity, xAxis);
+        float currentZ = Vector3.Dot(relativeVelocity, zAxis);
+
+        float maxSpeedChange = acceleration * Time.deltaTime;
+
+        float newX =
+            Mathf.MoveTowards(currentX, playerInput.x * speed, maxSpeedChange);
+        float newZ =
+            Mathf.MoveTowards(currentZ, playerInput.y * speed, maxSpeedChange);
+
+        velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
+    }
+
+    void Jump(Vector3 gravity)
+    {
+        Vector3 jumpDirection;
+        if (OnGround)
+        {
+            jumpDirection = contactNormal;
+        }
+        else if (OnSteep)
+        {
+            jumpDirection = steepNormal;
+            jumpPhase = 0;
+        }
+        else if (maxAirJumps > 0 && jumpPhase <= maxAirJumps)
+        {
+            if (jumpPhase == 0)
+            {
+                jumpPhase = 1;
+            }
+            jumpDirection = contactNormal;
+        }
+        else
+        {
+            return;
+        }
+
+        stepsSinceLastJump = 0;
+        jumpPhase += 1;
+        float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
+        jumpDirection = (jumpDirection + upAxis).normalized;
+        float alignedSpeed = Vector3.Dot(velocity, jumpDirection);
+        if (alignedSpeed > 0f)
+        {
+            jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
+        }
+        velocity += jumpDirection * jumpSpeed;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        EvaluateCollision(collision);
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        EvaluateCollision(collision);
+    }
+
+    void EvaluateCollision(Collision collision)
+    {
+        int layer = collision.gameObject.layer;
+        float minDot = GetMinDot(layer);
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            Vector3 normal = collision.GetContact(i).normal;
+            float upDot = Vector3.Dot(upAxis, normal);
+            if (upDot >= minDot)
+            {
+                groundContactCount += 1;
+                contactNormal += normal;
+                connectedBody = collision.rigidbody;
+            }
+            else
+            {
+                if (upDot > -0.01f)
+                {
+                    steepContactCount += 1;
+                    steepNormal += normal;
+                    if (groundContactCount == 0)
+                    {
+                        connectedBody = collision.rigidbody;
+                    }
+                }
+                if (
+                    desiresClimbing && upDot >= minClimbDotProduct &&
+                    (climbMask & (1 << layer)) != 0
+                )
+                {
+                    climbContactCount += 1;
+                    climbNormal += normal;
+                    lastClimbNormal = normal;
+                    connectedBody = collision.rigidbody;
+                }
+            }
+        }
+    }
+
+    Vector3 ProjectDirectionOnPlane(Vector3 direction, Vector3 normal)
+    {
+        return (direction - normal * Vector3.Dot(direction, normal)).normalized;
+    }
+
+    float GetMinDot(int layer)
+    {
+        return (stairsMask & (1 << layer)) == 0 ?
+            minGroundDotProduct : minStairsDotProduct;
+    }
+
+
+    #endregion
+
 }
