@@ -20,23 +20,23 @@ public class RestPlatform1 : MonoBehaviour
     {
         if (other.CompareTag("Player")) // Ensure your player has the "Player" tag
         {
-            Player player = other.GetComponent<Player>();
-            if (player != null)
-            {
-                player.CanRest = true; 
-            }
+            //Player player = other.GetComponent<Player>();
+            //if (player != null)
+            //{
+            //    player.CanRest = true; 
+            //}
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
-        {
-            Player player = other.GetComponent<Player>();
-            if (player != null)
-            {
-                player.CanRest = false;
-            }
+        { 
+            //Player player = other.GetComponent<Player>();
+            //if (player != null)
+            //{
+            //    player.CanRest = false;
+            //}
         }
     }
 }
