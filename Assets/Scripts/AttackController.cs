@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AttackController : MonoBehaviour
@@ -13,8 +14,12 @@ public class AttackController : MonoBehaviour
     public CameraController cameraController;
     public Vector3 mousePos;
     public Vector3 worldPos;
+
+    public List<float> cooldownTimes;
     void Start()
-    {}
+    {
+
+    }
 
     // Update is called once per frame
     void Update()
@@ -40,6 +45,4 @@ public class AttackController : MonoBehaviour
             }
         }
     }
-    
-
 }

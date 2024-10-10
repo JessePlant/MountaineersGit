@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -7,6 +8,7 @@ public class Bullet : MonoBehaviour
     private Camera cam;
     public CameraController cameraController;
     public AttackController attackController;
+    public Transform gert;
     public float speed = 3.5f;
     public bool isMoving = false;
     Vector3 mousePos;
@@ -15,6 +17,7 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
+        gert = GameObject.Find("Gert").GetComponent<Transform>();
         attackController = GameObject.Find("AttackController").GetComponent<AttackController>();
         dir = calcDirection(cameraController);
     }
@@ -22,6 +25,10 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Vector3.Distance(gert.position, transform.position)>10)
+        {
+            Destroy(gameObject);
+        }
         transform.Translate(dir*speed*Time.deltaTime);
     }
     public Vector2 calcDirection(CameraController camera)
@@ -31,6 +38,15 @@ public class Bullet : MonoBehaviour
         isMoving = true;
         return direction.normalized;
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Enemy")
+        {
+            Destroy(gameObject);
+        }
+    }
+
 
 
 }

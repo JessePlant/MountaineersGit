@@ -12,17 +12,17 @@ public class EnemyBehaviour : MonoBehaviour
     public float moveSpeed;
     public float timeBetweenAttacks;
     public HealthManager healthManager;
-    bool alreadyAttacked;
+    public bool alreadyAttacked;
     public float attackRange;
     public bool inAttackRange;
     public LayerMask playerLayer;
+    public float enemyHealth = 30f;
 
     void Start(){
         Gert = GameObject.Find("Gert").GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
         agent.autoTraverseOffMeshLink = true;
-        healthManager = GameObject.Find("HealthManager").GetComponent<HealthManager>();
-        attackRange = 1f;
+        attackRange = 2f;
     }
 
    
@@ -44,12 +44,18 @@ public class EnemyBehaviour : MonoBehaviour
         agent.SetDestination(transform.position);
         transform.LookAt(Gert);
         if(!alreadyAttacked){
-            healthManager.Playerdmg("Gert");
             alreadyAttacked = true;
+            healthManager.Playerdmg("Gert");
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
     void ResetAttack(){
         alreadyAttacked = false;
+    }
+    public void TakeDamage(float damage){
+        enemyHealth -= damage;
+        if(enemyHealth <= 0){
+            Destroy(gameObject);
+        }
     }
 }

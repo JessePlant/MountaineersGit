@@ -8,7 +8,7 @@ public class HealthManager : MonoBehaviour
     public float Ghealth;
     public float Ehealth;
     public CameraController cameraController;
-    public float dmg; 
+    public float dmg = 25; 
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +23,7 @@ public class HealthManager : MonoBehaviour
 
     public void Playerdmg(String playerName)
     {
-        if (playerName.Equals("Gert"))
+        if (playerName == "Gert")
         {
             Ghealth -= dmg;
         }
