@@ -16,7 +16,6 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         onGert = true;
-        
         target1 = GameObject.Find("Gert");
         target2 = GameObject.Find("Emily");
         //Set default angle to Gert.

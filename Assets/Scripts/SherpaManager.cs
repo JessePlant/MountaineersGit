@@ -10,7 +10,6 @@ public class SherpaManager : MonoBehaviour
     public Guns LazerRifle;
     void Start()
     {
-        assaultRifle = new Guns(10f, 0.1f);
     }
 
     // Update is called once per frame
