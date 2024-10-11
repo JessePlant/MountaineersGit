@@ -20,13 +20,13 @@ public class PhysicalState : MonoBehaviour
     [SerializeField] private float currentStamina = 100f;
     [SerializeField] private float staminaRegenerationRate = 10f;
     [SerializeField] private float maximumStamina = 100f;
-    [SerializeField] private float movementStaminaCost = 10f;
+    [SerializeField] private float movementStaminaCost = 1f;
 
     [Header("Health Values")]
     [SerializeField] private float currentHealth = 100f;
     [SerializeField] private float healthRegenerationRate = 10f;
     [SerializeField] private float maximumHealth = 100f;
-    [SerializeField] private float healthDamage = 10f;
+    [SerializeField] private float healthDamage = 1f;
 
 
 

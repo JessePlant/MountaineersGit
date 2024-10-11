@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private bool isJumpRequested;
     private bool isClimbRequested;
 
-    private GameObject playerGamrObject;
+    private GameObject playerGameObject;
     #endregion
 
     #region Properties 
@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     void Start() 
     {
 
-        playerGamrObject = GameObject.Find("Player");
+        playerGameObject = GameObject.Find("Player");
         Gert = GameObject.Find("Gert").GetComponent<Player>();
         Emily = GameObject.Find("Emily").GetComponent<Player>();
         activePlayer = Gert;
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(Gert.gameObject);
             Destroy(Emily.gameObject);
-            Destroy(playerGamrObject);
+            Destroy(playerGameObject);
         }
 
 
