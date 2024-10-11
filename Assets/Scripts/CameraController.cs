@@ -54,9 +54,13 @@ public class CameraController : MonoBehaviour
         else
         {
             targ2Pos = target2.transform.position;
-            Vector3 Dir = mountMid-targ1Pos;
-            if (Physics.Raycast(target1.transform.position, Dir ))
-            Camera.main.transform.position = target2.transform.position + new Vector3(0,0,-17);
+            Vector3 Dir = mountMid-targ2Pos;
+            if (Physics.Raycast(target2.transform.position, Dir, out Hit ))
+            {
+                 Camera.main.transform.position = targ2Pos + Hit.normal*17;
+            }
+            Camera.main.transform.LookAt(targ2Pos);
+            //Camera.main.transform.position = target2.transform.position + new Vector3(0,0,-17);
         }
         //if(target1.transform.position.y >= screenTopY || target2.transform.position.y >= screenTopY)
         //{
