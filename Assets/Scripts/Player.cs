@@ -85,7 +85,10 @@ public class Player : MonoBehaviour
     {
         get { return physicalState; }
     }
-
+    public Transform InputSpace
+    {
+        set { inputSpace = value; }
+    }
     #endregion
 
     #region Unity Methods

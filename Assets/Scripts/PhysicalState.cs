@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PhysicalState : MonoBehaviour
 {
-    [SerializeField] private Camera camera;
+    [SerializeField] private Camera cam;
     [SerializeField] private Transform target;
 
     [Header("Stamina Bar")]
@@ -33,6 +33,8 @@ public class PhysicalState : MonoBehaviour
     public bool IsAlive => currentStamina > 0 && currentHealth > 0;
     public bool IsOutOfStamina => currentStamina == 0;
 
+    public Camera PlayerCamera { set { cam = value; } }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,8 +48,8 @@ public class PhysicalState : MonoBehaviour
         healthBar.transform.position = target.position + healthBarOffset; 
         staminaBar.transform.position = target.position + staminaBarOffset;
 
-        healthBar.transform.rotation = camera.transform.rotation;
-        staminaBar.transform.rotation = camera.transform.rotation;
+        healthBar.transform.rotation = cam.transform.rotation;
+        staminaBar.transform.rotation = cam.transform.rotation;
 
     }
 
