@@ -9,13 +9,12 @@ public class Bullet : MonoBehaviour
     public CameraController cameraController;
     public AttackController attackController;
     public Transform gert;
-    public float speed = 3.5f;
+    //public float speed = 3.5f;
     public bool isMoving = false;
     Vector3 mousePos;
     Vector3 dir;
     public Vector3 enemyPos;
-    
-    public float damage = 10;
+    //public float damage = 10;
     public bool didHit; 
     EnemyBehaviour e;
     
@@ -37,7 +36,7 @@ public class Bullet : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        transform.Translate(dir*speed*Time.deltaTime);
+        transform.Translate(dir*attackController.currentGun.speed*Time.deltaTime);
     }
     public Vector2 calcDirection(CameraController camera)
     {
@@ -65,7 +64,7 @@ public class Bullet : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         if(didHit){
-            e.TakeDamage(damage);
+            e.TakeDamage(attackController.currentGun.attackDamage);
         }
         Destroy(gameObject);
     }

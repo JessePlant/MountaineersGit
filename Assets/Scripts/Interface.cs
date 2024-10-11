@@ -7,12 +7,16 @@ public class Interface : MonoBehaviour
     // Start is called before the first frame update
     public GameObject Gert;
     public GameObject Emily;
-    void Start()
+    [SerializeField]
+    public List<Guns> guns = new List<Guns>();
+    
+    void Awake()
     {
-        Gert = GameObject.Find("Gert");
-        Emily = GameObject.Find("Emily");
+        guns.Add(new Guns("Assault Rifle", 10, 10, 30, 2));
+        guns.Add(new Guns("Slingshot", 5, 5, 1, 1));
+        guns.Add(new Guns("Lazer Rifle", 15, 15, 20, 3));
+        guns.ForEach(gun => Debug.Log(gun.name));
     }
-
     // Update is called once per frame
     void Update()
     {

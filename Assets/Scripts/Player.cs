@@ -1,14 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-<<<<<<< HEAD
-    public enum PlayerState { FALLING, CLIMBING, RESTING }
-    public Guns selectedGun;
-    
-=======
 
    public enum PlayerState
    {
@@ -18,7 +13,6 @@ public class Player : MonoBehaviour
         DEAD
    }
 
->>>>>>> 3e48eb5c9ba505d2b7847c3a47fd99e0c261c0ca
     #region Data Members
 
     #region Serialized: Appear on unity editor

@@ -10,7 +10,7 @@ public class EnemyBehaviour : MonoBehaviour
     public NavMeshAgent agent;
     public Transform Gert;
     public float moveSpeed;
-    public float timeBetweenAttacks = 1f;
+    public float timeBetweenAttacks = 5f;
     public HealthManager healthManager;
     public bool alreadyAttacked;
     public float attackRange;
@@ -63,6 +63,7 @@ public class EnemyBehaviour : MonoBehaviour
         print(enemyHealth);
         if(enemyHealth <= 0){
             Destroy(gameObject);
+            SaveManager.Instance.money += 5;
         }
         else{
             agent.SetDestination(transform.position);

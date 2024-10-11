@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     public float scrollSpeed = 5.0f;
      public float smoothSpeed = 0.125f;
      public float cameraSize = 4.5f;
+    [SerializeField]
     public GameObject target1, target2;
     void Start()
     {

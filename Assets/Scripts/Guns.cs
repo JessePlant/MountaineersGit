@@ -1,12 +1,22 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class Guns{
+public class Guns
+{
+    // Start is called before the first frame update    public float attackDamage;
+    public float speed;
+    public float clipSize;
+    public String name; 
+    public float reloadSpeed;
     public float attackDamage;
-    public float coolDownTime;
-    public float[] cooldownTimes = {1f, 0.1f, 0.3f};
 
-    public Guns(float attackDamage, float coolDownTime){
+    public Guns(String name, float attackDamage, float speed, float clipSize, float reloadSpeed){
+        this.name = name;
         this.attackDamage = attackDamage;
-        this.coolDownTime = coolDownTime;
+        this.speed = speed;
+        this.clipSize = clipSize;
+        this.reloadSpeed = reloadSpeed;
     }
 }

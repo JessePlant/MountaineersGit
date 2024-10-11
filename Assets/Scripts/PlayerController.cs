@@ -35,12 +35,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-<<<<<<< HEAD
-        // Detect movement input in Update
-        if(!enemyBehaviour.alreadyAttacked){
-=======
         //// Detect movement input in Update
->>>>>>> 3e48eb5c9ba505d2b7847c3a47fd99e0c261c0ca
         float moveVertical = Input.GetAxis("Vertical");
         float moveHorizontal = Input.GetAxis("Horizontal");
 
@@ -88,7 +83,7 @@ public class PlayerController : MonoBehaviour
         //    }
         //}
     }
-    }
+    
 
     void FixedUpdate()
     {
@@ -96,6 +91,6 @@ public class PlayerController : MonoBehaviour
         //activePlayer.Move();
     }
 
-
-
 }
+
+
