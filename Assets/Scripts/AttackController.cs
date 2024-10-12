@@ -32,7 +32,7 @@ public class AttackController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(currentGun!=null)
+        if(currentGun!=null && !SherpaShopKeeper.isInShop && !isReloading)
         {
         Reload();
         Shoot(cameraController);
@@ -66,13 +66,13 @@ public class AttackController : MonoBehaviour
     {
         if(ShotsFired >= currentGun.clipSize){
             //Reload
+            isReloading = true;
             StartCoroutine(ReloadCoroutine());
         }
     }
     IEnumerator ReloadCoroutine()
     {
         reloadingText.gameObject.SetActive(true);
-        isReloading = true;
         StartCoroutine(PulseText());
         yield return new WaitForSeconds(currentGun.reloadSpeed);
         reloadingText.gameObject.SetActive(false);

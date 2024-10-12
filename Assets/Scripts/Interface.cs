@@ -12,7 +12,7 @@ public class Interface : MonoBehaviour
     
     void Awake()
     {
-        guns.Add(new Guns("SlingShot", 5, 2, 1, 0.5f));
+        guns.Add(new Guns("SlingShot", 5, 2, 1, 1f));
         guns.Add(new Guns("Assault Rifle", 10, 6, 35, 5));
         guns.Add(new Guns("Lazer Rifle", 40, 15, 7, 10));
         guns.ForEach(gun => Debug.Log(gun.name));
