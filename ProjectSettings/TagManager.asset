@@ -5,7 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Rest Platform
-  - Rest Platform Wall
+  - Vaultable
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -13,10 +14,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Agent
-  - Detailed
-  - Stairs
-  - Unclimbable
+  - Player
+  - 
+  - 
+  - 
   - 
   - 
   - 

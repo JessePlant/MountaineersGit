@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EmilyAbility : MonoBehaviour
 {
-    public HealthManager helthManager;
     public float heal = 10;
     public CameraController cameraController;
     public bool isOnCooldown = false;
@@ -26,11 +25,11 @@ public class EmilyAbility : MonoBehaviour
     void Heal()
     {
         if (Input.GetKeyDown(KeyCode.G)) { 
-         helthManager.Ghealth += heal;
+         HealthManager.Ghealth += heal;
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            helthManager.Ehealth += heal;
+            HealthManager.Ehealth += heal;
         }
         StartCoroutine(Cooldown());
     }

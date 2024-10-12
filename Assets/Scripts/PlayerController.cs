@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private Player Emily { get; set; }
  
     #endregion
-
+    public EnemyBehaviour enemyBehaviour;
     // Start is called before the first frame update
     void Start() 
     {
@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviour
         //    }
         //}
     }
+    
 
     void FixedUpdate()
     {
@@ -94,6 +95,6 @@ public class PlayerController : MonoBehaviour
         //activePlayer.Move();
     }
 
-
-
 }
+
+

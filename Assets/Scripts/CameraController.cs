@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     public float scrollSpeed = 5.0f;
      public float smoothSpeed = 0.125f;
      public float cameraSize = 4.5f;
+    [SerializeField]
     public GameObject target1, target2;
 
     public Vector3 mountMid, targ1Pos, targ2Pos;
@@ -18,7 +19,6 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         onGert = true;
-        
         target1 = GameObject.Find("Gert");
         target2 = GameObject.Find("Emily");
         //Set default angle to Gert.

@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
-    public float Ghealth;
-    public float Ehealth;
-    public CameraController cameraController;
+    [SerializeField]
+    public static float Ghealth;
+    public static float Ehealth;
+    public float dmg = 25; 
     // Start is called before the first frame update
     void Start()
     {
@@ -19,27 +21,10 @@ public class HealthManager : MonoBehaviour
     {
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void Playerdmg()
     {
-        if( other.gameObject.tag == "enemy")
-        {
-            PlayerDamage(10f, cameraController);
-        }
-    }
-    public void PlayerDamage(float damage,CameraController camera)
-    {
-        if (camera.onGert)
-        {
-            Ghealth -= damage;
-        }
-        else
-        {
-            Ehealth -= damage;
-        }
-        if (Ghealth <= 0 || Ehealth <=0)
-        {
-            Debug.Log("Player is dead");
-        }
+        Ghealth -= 25f;
+        Debug.Log("Gerts Health"+Ghealth);
     }
 
 }
