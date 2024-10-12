@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Bullet : MonoBehaviour
 {
@@ -25,19 +26,21 @@ public class Bullet : MonoBehaviour
         gert = GameObject.Find("Gert").GetComponent<Transform>();
         attackController = GameObject.Find("AttackController").GetComponent<AttackController>();
         dir = calcDirection(cameraController);
+        dir.z = gert.transform.position.z;
+        print("Direction: "+dir);
         didHit = hitEnemy(gert);
     }
 
     // Update is called once per frame
     void Update()
     { 
-        print(enemyPos);
         if(Vector3.Distance(gert.position, transform.position)>10 || transform.position == enemyPos)
         {
             Destroy(gameObject);
         }
         transform.Translate(dir*attackController.currentGun.speed*Time.deltaTime);
     }
+
     public Vector2 calcDirection(CameraController camera)
     {
         
@@ -63,9 +66,9 @@ public class Bullet : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        if(didHit){
+        if(didHit && collision.gameObject.tag == "Enemy"){
             e.TakeDamage(attackController.currentGun.attackDamage);
-        }
-        Destroy(gameObject);
+            Destroy(gameObject);
+        }   
     }
 }

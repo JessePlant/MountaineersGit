@@ -20,30 +20,29 @@ public class AttackController : MonoBehaviour
     public SherpaShopKeeper SherpaShopKeeper;
     public float pulseSpeed = 1f;
     public List<float> cooldownTimes;
+    public bool isReloading;
     void Start()
     {
         ShotsFired = 0;
         inGameUI.gameObject.SetActive(true);
         reloadingText.gameObject.SetActive(false);
+        isReloading = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(currentGun!=null){
-        print(currentGun.name);
+        if(currentGun!=null)
+        {
         Reload();
         Shoot(cameraController);
         }
     }
     public void Shoot(CameraController camera)
     {
-        print("camera test"+ camera.onGert);
-
         if (camera.onGert)
         {
-            print("Camera on Gert");
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !isReloading)
             {
                 ShotsFired++;
                 print("Shooting" + ShotsFired);
@@ -52,9 +51,13 @@ public class AttackController : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
+                    print("Gert Pos"+camera.target1.transform.position);   
                     worldPos = hit.point;
-                    print(worldPos);
+                    print("Hit Pos"+worldPos);
                     Instantiate(bulletPrefab, camera.target1.transform.position, Quaternion.identity);
+                }
+                else{
+                    Debug.Log("No hit");
                 }
             }
         }
@@ -69,9 +72,11 @@ public class AttackController : MonoBehaviour
     IEnumerator ReloadCoroutine()
     {
         reloadingText.gameObject.SetActive(true);
+        isReloading = true;
         StartCoroutine(PulseText());
         yield return new WaitForSeconds(currentGun.reloadSpeed);
         reloadingText.gameObject.SetActive(false);
+        isReloading = false;
         ShotsFired = 0;
     }
     IEnumerator PulseText()

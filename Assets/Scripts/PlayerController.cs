@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
         Gert = GameObject.Find("Gert").GetComponent<Player>();
         Emily = GameObject.Find("Emily").GetComponent<Player>();
         activePlayer = Gert;
-        enemyBehaviour = GameObject.Find("Enemy").GetComponent<EnemyBehaviour>();
 
     }
 

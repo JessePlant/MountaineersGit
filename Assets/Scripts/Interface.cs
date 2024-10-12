@@ -12,9 +12,9 @@ public class Interface : MonoBehaviour
     
     void Awake()
     {
-        guns.Add(new Guns("Assault Rifle", 10, 10, 30, 2));
-        guns.Add(new Guns("Slingshot", 5, 5, 1, 1));
-        guns.Add(new Guns("Lazer Rifle", 15, 15, 20, 3));
+        guns.Add(new Guns("SlingShot", 5, 2, 1, 0.5f));
+        guns.Add(new Guns("Assault Rifle", 10, 6, 35, 5));
+        guns.Add(new Guns("Lazer Rifle", 40, 15, 7, 10));
         guns.ForEach(gun => Debug.Log(gun.name));
     }
     // Update is called once per frame
