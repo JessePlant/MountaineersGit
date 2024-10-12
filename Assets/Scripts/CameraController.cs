@@ -12,6 +12,9 @@ public class CameraController : MonoBehaviour
      public float smoothSpeed = 0.125f;
      public float cameraSize = 4.5f;
     public GameObject target1, target2;
+
+    public Vector3 mountMid, targ1Pos, targ2Pos;
+    RaycastHit Hit; 
     void Start()
     {
         onGert = true;
@@ -21,7 +24,8 @@ public class CameraController : MonoBehaviour
         //Set default angle to Gert.
         Camera.main.orthographicSize = cameraSize;
         
-        
+        //Here some logicc to find centre of mountain. 
+        mountMid = new Vector3 (7.5f, 0.5f, 7.5f);
         Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this with the current wall surface normal force direction times5. ie opposite direction player facing.
         //screenTopY = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
 
@@ -38,11 +42,25 @@ public class CameraController : MonoBehaviour
         }
         if(onGert)
         {
-            Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this as above.
+            targ1Pos = target1.transform.position;
+            Vector3 Dir = mountMid-targ1Pos;
+            if (Physics.Raycast(target1.transform.position, Dir, out Hit ))
+            {
+                Camera.main.transform.position = targ1Pos + Hit.normal*17; //Hit.normal is direction we need camera to move from player.
+            }
+            Camera.main.transform.LookAt(targ1Pos);
+            //Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this as above.
         }
         else
         {
-            Camera.main.transform.position = target2.transform.position + new Vector3(0,0,-17);
+            targ2Pos = target2.transform.position;
+            Vector3 Dir = mountMid-targ2Pos;
+            if (Physics.Raycast(target2.transform.position, Dir, out Hit ))
+            {
+                 Camera.main.transform.position = targ2Pos + Hit.normal*17;
+            }
+            Camera.main.transform.LookAt(targ2Pos);
+            //Camera.main.transform.position = target2.transform.position + new Vector3(0,0,-17);
         }
         //if(target1.transform.position.y >= screenTopY || target2.transform.position.y >= screenTopY)
         //{

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+//using System.Numerics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 playerMovement;
     private bool isJumpRequested;
     private bool isClimbRequested;
+    public LineRenderer chained;
 
     private GameObject playerGamrObject;
     #endregion
@@ -27,6 +29,8 @@ public class PlayerController : MonoBehaviour
         playerGamrObject = GameObject.Find("Player");
         Gert = GameObject.Find("Gert").GetComponent<Player>();
         Emily = GameObject.Find("Emily").GetComponent<Player>();
+        chained.SetPosition(0, Gert.transform.position);
+        chained.SetPosition(1, Emily.transform.position);
         activePlayer = Gert;
 
     }
@@ -61,7 +65,8 @@ public class PlayerController : MonoBehaviour
             Destroy(playerGamrObject);
         }
 
-
+        chained.SetPosition(0, Gert.transform.position);
+        chained.SetPosition(1, Emily.transform.position);
 
         //// Detect player switching
         if (Input.GetKeyDown(KeyCode.Tab))
