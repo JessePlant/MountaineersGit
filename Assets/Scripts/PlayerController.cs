@@ -60,9 +60,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Destroy(Gert.gameObject);
-            Destroy(Emily.gameObject);
-            Destroy(playerGamrObject);
+            //Destroy(Gert.gameObject);
+            //Destroy(Emily.gameObject);
+            //Destroy(playerGamrObject);
         }
 
         chained.SetPosition(0, Gert.transform.position);

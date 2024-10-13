@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -43,6 +45,9 @@ public class Player : MonoBehaviour
     [Header("Materials")]
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material climbingMaterial = default;
+
+    // New variable to track velocity before hitting the ground
+    private Vector3 lastVelocity;
 
     #endregion
 
@@ -137,21 +142,35 @@ public class Player : MonoBehaviour
     void Update()
     {
         meshRenderer.material = Climbing ? climbingMaterial : normalMaterial;
-        if (physicalState.IsOutOfStamina && !OnGround)
-        {
-            playerState = PlayerState.FALLING;
-        }
+        //if (physicalState.IsOutOfStamina && !OnGround)
+        //{
+        //    playerState = PlayerState.FALLING;
+        //}
 
-        if (playerState == PlayerState.FALLING && OnGround)
+        //if (playerState == PlayerState.FALLING && OnGround)
+        //{
+        //    playerState = PlayerState.DEAD;
+        //}
+        if (!physicalState.IsAlive)
         {
             playerState = PlayerState.DEAD;
         }
+
+        if (physicalState.IsOutOfStamina && !OnGround)
+        {
+            playerState = PlayerState.FALLING;
+            playerRigidbody.useGravity = true;
+        }
+
+        
 
     }
 
     void FixedUpdate()
     {
         Vector3 gravity = CustomGravity.GetGravity(playerRigidbody.position, out upAxis);
+        lastVelocity = playerRigidbody.velocity; // Track the velocity in every frame
+
         UpdateState();
         AdjustVelocity();
 
@@ -177,13 +196,14 @@ public class Player : MonoBehaviour
             playerVelocity +=
                 (gravity - contactNormal * (maxClimbAcceleration * 0.9f)) *
                 Time.deltaTime;
-            Debug.Log("On Ground");
         }
         else
         {
             playerVelocity += gravity * Time.deltaTime;
         }
         playerRigidbody.velocity = playerVelocity;
+       
+
         ClearState();
 
         if (movementInput != Vector2.zero)
@@ -201,6 +221,8 @@ public class Player : MonoBehaviour
         connectionVelocity = Vector3.zero;
         previousConnectedRigidbody = connectedRigidbody;
         connectedRigidbody = null;
+        playerState = PlayerState.CLIMBING;
+        playerRigidbody.useGravity = false;
     }
 
     void UpdateState()
@@ -394,11 +416,27 @@ public class Player : MonoBehaviour
             jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
         }
         playerVelocity += jumpDirection * jumpSpeed;
+        playerState = PlayerState.FALLING;
     }
 
     void OnCollisionEnter(Collision collision)
     {
         EvaluateCollision(collision);
+        //print(playerRigidbody.velocity.magnitude);
+        if (collision.collider.CompareTag("Ground") && lastVelocity.y < 0f)
+        {
+            float impactForce = lastVelocity.magnitude;
+            float damageThreshold = 10f;
+            if (impactForce > damageThreshold)
+            {
+                float damage = (impactForce - damageThreshold) * 5f; // Adjust the multiplier as needed
+
+                // Apply damage to the player
+                physicalState.Damage(damage);
+            }
+            playerState = PlayerState.CLIMBING;
+        }
+
     }
 
     void OnCollisionStay(Collision collision)
