@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
     [SerializeField] Material climbingMaterial = default;
 
     // New variable to track velocity before hitting the ground
-    private Vector3 lastVelocity;
+    private Vector3 lastVelocity, lastPosition;
 
     #endregion
 
@@ -102,6 +102,7 @@ public class Player : MonoBehaviour
         physicalState = GetComponent<PhysicalState>();
         playerRigidbody.useGravity = false;
         meshRenderer = GetComponent<MeshRenderer>();
+        lastPosition = lastVelocity = Vector3.zero;
         OnValidate();
     }
 
@@ -206,11 +207,12 @@ public class Player : MonoBehaviour
 
         ClearState();
 
-        if (movementInput != Vector2.zero)
+        if (movementInput != Vector2.zero && playerRigidbody.position != lastPosition)
         {
             physicalState.ConsumeStamina();
         }
 
+        lastPosition = playerRigidbody.position;
         isClimbingRequested &= !physicalState.IsOutOfStamina;
     }
 
