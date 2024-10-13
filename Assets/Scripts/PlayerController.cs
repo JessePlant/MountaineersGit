@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             activePlayer = activePlayer == Gert ? Emily : Gert;
-            Gert.transform.position = new Vector3(0,203,0);
+            //Gert.transform.position = new Vector3(0,203,0);
         }
 
         //if (Input.GetKeyDown(KeyCode.Space))
