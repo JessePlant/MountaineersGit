@@ -6,15 +6,16 @@ public class MountainGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject climbablePrefab; // Prefab for climbable cubes
     [SerializeField] private GameObject unclimbablePrefab; // Prefab for unclimbable cubes
-    //[SerializeField] private GameObject restPrefab; // Prefab for rest cubes
-    //[SerializeField] private GameObject gertPrefab; // Prefab for Gert
-    //[SerializeField] private GameObject emilyPrefab; // Prefab for Emily
     [SerializeField] private int mountainHeight = 10; // Number of cubes along height
     [SerializeField] private int mountainWidth = 10; // Number of cubes along width
     [SerializeField] private int mountainDepth = 10; // Number of cubes along depth
     [SerializeField] private float cubeSize = 1f; // Size of each cube
     [SerializeField] private float unclimbableProbability = 0.3f; // Probability of making a square unclimbable (30%)
     [SerializeField] private string unclimbableLayerName = "Unclimbable"; // Layer name for unclimbable squares
+
+    // BoxCollider settings for unclimbable cubes
+    [SerializeField] private Vector3 colliderSizeMultiplier = new(1f, 1f, 1f); // Size multiplier for the BoxCollider
+    [SerializeField] private Vector3 colliderCenterOffset = Vector3.zero; // Offset for the BoxCollider center
 
     private void Start()
     {
@@ -76,7 +77,21 @@ public class MountainGenerator : MonoBehaviour
                         else
                         {
                             cube = Instantiate(unclimbablePrefab, startPosition + new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity);
+
                             cube.layer = unclimbableLayer; // Set the layer for unclimbable cubes
+
+                            // Adjust the BoxCollider for unclimbable cubes
+                            BoxCollider boxCollider = cube.GetComponent<BoxCollider>();
+                            if (boxCollider == null)
+                            {
+                                boxCollider = cube.AddComponent<BoxCollider>();
+                            }
+
+                            // Increase the size of the BoxCollider
+                            boxCollider.size = Vector3.Scale(boxCollider.size, colliderSizeMultiplier);
+
+                            // Adjust the center of the BoxCollider to encapsulate the cube properly
+                            boxCollider.center = colliderCenterOffset;
                         }
 
                         // Set the cube's scale
@@ -97,20 +112,7 @@ public class MountainGenerator : MonoBehaviour
 
     void PlaceCharacters()
     {
-        // Calculate the base position for Gert and Emily
-        //Vector3 basePosition = new Vector3(
-        //    -mountainWidth * cubeSize / 2f,
-        //    0f, // Y position at the base of the mountain
-        //    -mountainDepth * cubeSize / 2f
-        //);
-
-        //// Offset positions slightly to place them apart
-        //Vector3 gertPosition = basePosition + new Vector3(1f, 0f, 1f); // Offset for Gert
-        //Vector3 emilyPosition = basePosition + new Vector3(-1f, 0f, 1f); // Offset for Emily
-
-        //// Instantiate Gert and Emily at the calculated positions
-        //Instantiate(gertPrefab, gertPosition, Quaternion.identity);
-        //Instantiate(emilyPrefab, emilyPosition, Quaternion.identity);
+        // TODO: Implement logic for placing characters
     }
 
     // Function to determine if the cube is on the outer layer

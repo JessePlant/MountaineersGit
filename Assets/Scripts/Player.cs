@@ -425,11 +425,11 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         EvaluateCollision(collision);
-        //print(playerRigidbody.velocity.magnitude);
+        print(collision.collider.tag);
         if (collision.collider.CompareTag("Ground") && lastVelocity.y < 0f)
         {
             float impactForce = lastVelocity.magnitude;
-            float damageThreshold = 10f;
+            float damageThreshold = 8f;
             if (impactForce > damageThreshold)
             {
                 float damage = (impactForce - damageThreshold) * 5f; // Adjust the multiplier as needed

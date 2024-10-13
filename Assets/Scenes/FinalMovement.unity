@@ -170,7 +170,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 4.5, y: 0.5, z: -0.5}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1821806649}
@@ -198,7 +198,7 @@ MonoBehaviour:
   currentStamina: 100
   staminaRegenerationRate: 10
   maximumStamina: 100
-  movementStaminaCost: 10
+  movementStaminaCost: 5
   currentHealth: 100
   healthRegenerationRate: 10
   maximumHealth: 100
@@ -692,7 +692,7 @@ Transform:
   m_GameObject: {fileID: 312903504}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -15}
+  m_LocalPosition: {x: 0, y: 0, z: -8.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4241,7 +4241,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5.844, y: 0.5, z: -0.5}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1752596950}
@@ -4269,7 +4269,7 @@ MonoBehaviour:
   currentStamina: 100
   staminaRegenerationRate: 10
   maximumStamina: 100
-  movementStaminaCost: 10
+  movementStaminaCost: 5
   currentHealth: 100
   healthRegenerationRate: 10
   maximumHealth: 100
@@ -4611,13 +4611,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbablePrefab: {fileID: 73666901626324975, guid: c6db40491ef1ecc40a48045040f5d072, type: 3}
-  unclimbablePrefab: {fileID: 73666901626324975, guid: c6db40491ef1ecc40a48045040f5d072, type: 3}
+  unclimbablePrefab: {fileID: 820602545976091257, guid: 697c3836509a48148ba7d295d75949b0, type: 3}
   mountainHeight: 100
   mountainWidth: 15
   mountainDepth: 15
   cubeSize: 1
   unclimbableProbability: 0.3
   unclimbableLayerName: Unclimbable
+  colliderSizeMultiplier: {x: 1.2, y: 1.2, z: 1.2}
+  colliderCenterOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &1024746310132524806
 PrefabInstance:
   m_ObjectHideFlags: 0
