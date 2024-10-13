@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 public class Wall1Generator : MonoBehaviour
 {
-    public GameObject cubePrefab;
+    public GameObject cubePrefab, Gert;
     public Interface Location;
     public int length = 15;
     public int height = 10;
@@ -19,7 +19,7 @@ public class Wall1Generator : MonoBehaviour
     public NavMeshSurface ThroughScreen;
     void Start()
     {
-
+        Gert= GameObject.Find("Gert");
 
     }
     void GenWalls(float height)

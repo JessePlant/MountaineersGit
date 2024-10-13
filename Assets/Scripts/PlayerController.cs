@@ -7,12 +7,14 @@ public class PlayerController : MonoBehaviour
 {
     #region Data Members
     private Player activePlayer;
+    public ChangeScene cs;
+    public GameObject gameOverCanvas;
 
     private Vector2 playerMovement;
     private bool isJumpRequested;
     private bool isClimbRequested;
     public LineRenderer chained;
-
+    public bool gOver;
     private GameObject playerGamrObject;
     #endregion
 
@@ -26,12 +28,17 @@ public class PlayerController : MonoBehaviour
     void Start() 
     {
 
+        cs = GetComponent<ChangeScene>();
+        
+        gameOverCanvas = GameObject.Find("GameOverScreen");
+        gameOverCanvas.SetActive(false);
         playerGamrObject = GameObject.Find("Player");
         Gert = GameObject.Find("Gert").GetComponent<Player>();
         Emily = GameObject.Find("Emily").GetComponent<Player>();
         chained.SetPosition(0, Gert.transform.position);
         chained.SetPosition(1, Emily.transform.position);
         activePlayer = Gert;
+        gOver = false;
 
     }
 
@@ -72,6 +79,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             activePlayer = activePlayer == Gert ? Emily : Gert;
+            Gert.transform.position = new Vector3(0,203,0);
         }
 
         //if (Input.GetKeyDown(KeyCode.Space))
@@ -86,6 +94,18 @@ public class PlayerController : MonoBehaviour
         //        Emily.State = Player.PlayerState.CLIMBING;
         //    }
         //}
+       
+        if(Gert.transform.position.y>200 || Emily.transform.position.y>200 || gOver==true)
+        {
+            gOver=true;
+            Debug.Log(gOver);
+            gameOverCanvas.SetActive(true);
+            cs.OpenGameWinCanvas();
+        }
+        if(Gert.State == Player.PlayerState.DEAD)
+        {
+            cs.OpenPlayerDead();
+        }
     }
     
 

@@ -122,6 +122,7 @@ public class Player : MonoBehaviour
             rightAxis = ProjectDirectionOnPlane(inputSpace.right, upAxis);
             forwardAxis =
                 ProjectDirectionOnPlane(inputSpace.forward, upAxis);
+            
         }
         else
         {
