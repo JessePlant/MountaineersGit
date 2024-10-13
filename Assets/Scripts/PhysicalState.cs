@@ -30,7 +30,7 @@ public class PhysicalState : MonoBehaviour
 
 
 
-    public bool IsAlive => currentStamina > 0 && currentHealth > 0;
+    public bool IsAlive => currentHealth > 0;
     public bool IsOutOfStamina => currentStamina == 0;
 
     // Start is called before the first frame update
@@ -49,6 +49,8 @@ public class PhysicalState : MonoBehaviour
         healthBar.transform.rotation = camera.transform.rotation;
         staminaBar.transform.rotation = camera.transform.rotation;
 
+        staminaBar.value = currentStamina;
+        healthBar.value = currentHealth;
     }
 
     public void ConsumeStamina()
@@ -78,7 +80,7 @@ public class PhysicalState : MonoBehaviour
             currentStamina += stamina * Time.deltaTime;
             currentStamina = Mathf.Min(currentStamina, maximumStamina); // Ensure stamina doesn't exceed max limit
         }
-        staminaBar.value = currentStamina;
+        healthBar.value = currentHealth;
     }
 
     public void Damage()
@@ -88,12 +90,11 @@ public class PhysicalState : MonoBehaviour
 
     public void Damage(float health)
     {
-        if (currentStamina > 0)
+        if (currentHealth > 0)
         {
-            currentHealth -= health * Time.deltaTime;
+            currentHealth -= health; // Directly apply the damage
             currentHealth = Mathf.Max(currentHealth, 0); // Ensure health doesn't drop below 0
         }
-        healthBar.value = currentHealth;
     }
 
     public void Heal()
