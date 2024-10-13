@@ -23,7 +23,7 @@ public class PhysicalState : MonoBehaviour
     [SerializeField] private float movementStaminaCost = 10f;
 
     [Header("Health Values")]
-    [SerializeField] private float currentHealth = 100f;
+    [SerializeField] public float currentHealth = 100f;
     [SerializeField] private float healthRegenerationRate = 10f;
     [SerializeField] private float maximumHealth = 100f;
     [SerializeField] private float healthDamage = 10f;
@@ -109,6 +109,30 @@ public class PhysicalState : MonoBehaviour
             currentHealth = Mathf.Min(currentHealth, maximumHealth); // Ensure stamina doesn't exceed max limit
         }
         healthBar.value = currentHealth;
+    }
+
+        public void RegenStamina(CameraController cameraController)
+    {
+        GameObject Gert = GameObject.Find("Gert");
+
+        bool whosLocked = Gert.Equals(gameObject) ? true : false;
+        if( currentStamina < maximumStamina)
+        {
+           if (whosLocked){
+                if(!cameraController.onGert || (cameraController.onGert && !Input.anyKeyDown)){
+                    currentStamina += staminaRegenerationRate * Time.deltaTime;
+                    currentStamina = Mathf.Min(currentStamina, maximumStamina);
+                    staminaBar.value = currentStamina;
+            }
+        }
+            else{
+                if(cameraController.onGert || (!cameraController.onGert && !Input.anyKeyDown)){
+                    currentStamina += staminaRegenerationRate * Time.deltaTime;
+                    currentStamina = Mathf.Min(currentStamina, maximumStamina);
+                    staminaBar.value = currentStamina;
+                }
+            }
+        }
     }
 
 }

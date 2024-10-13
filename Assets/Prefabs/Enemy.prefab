@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 498364555647604283}
   - component: {fileID: 6886188056269719127}
   - component: {fileID: 2637375036436244665}
+  - component: {fileID: 5207710904247865275}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -123,16 +124,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
   Gert: {fileID: 0}
+  Emily: {fileID: 0}
   moveSpeed: 0
   timeBetweenAttacks: 0
-  healthManager: {fileID: 0}
   alreadyAttacked: 0
   attackRange: 0
   inAttackRange: 0
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
-  enemyHealth: 30
+  attackController: {fileID: 0}
+  cameraController: {fileID: 0}
+  target: {fileID: 0}
+  healthBar: {fileID: 0}
+  healthBarOffset: {x: 0, y: 1, z: 0}
+  maxHealth: 30
+  currentHealth: 30
+  canMove: 1
 --- !u!195 &2637375036436244665
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -155,3 +163,30 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &5207710904247865275
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5854702688934075811}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
