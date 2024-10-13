@@ -6,12 +6,14 @@ public class MountainGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject climbablePrefab; // Prefab for climbable cubes
     [SerializeField] private GameObject unclimbablePrefab; // Prefab for unclimbable cubes
+    [SerializeField] private GameObject restPrefab; // Prefab for rest platform cubes
     [SerializeField] private int mountainHeight = 10; // Number of cubes along height
     [SerializeField] private int mountainWidth = 10; // Number of cubes along width
     [SerializeField] private int mountainDepth = 10; // Number of cubes along depth
     [SerializeField] private float cubeSize = 1f; // Size of each cube
     [SerializeField] private float unclimbableProbability = 0.3f; // Probability of making a square unclimbable (30%)
     [SerializeField] private string unclimbableLayerName = "Unclimbable"; // Layer name for unclimbable squares
+    [SerializeField] private float restRate = 0.1f; // Rest rate to calculate the number of rest platforms
 
     // BoxCollider settings for unclimbable cubes
     [SerializeField] private Vector3 colliderSizeMultiplier = new(1f, 1f, 1f); // Size multiplier for the BoxCollider
@@ -107,12 +109,56 @@ public class MountainGenerator : MonoBehaviour
 
     void CreateRestPlatforms()
     {
-        // TODO: Implement your logic for creating rest platforms if necessary
+        // Calculate the number of rest platforms for each side
+        int restPlatformsPerSide = Mathf.FloorToInt(0.1f * mountainHeight);
+
+        // Define the positions for the rest platforms on each side
+        Vector3 startPosition = new Vector3(
+            -mountainWidth * cubeSize / 2f,
+            0,
+            -mountainDepth * cubeSize / 2f
+        );
+
+        // Left face (x = 0)
+        for (int i = 0; i < restPlatformsPerSide; i++)
+        {
+            int randomHeight = restPlatformsPerSide * (i + 1);
+            float randomDepth = Random.Range(-mountainDepth / 2f + 1.5f, mountainDepth / 2f - 1.5f);
+            Vector3 position = new Vector3(startPosition.x - 0.5f, randomHeight, randomDepth);
+            Instantiate(restPrefab, position, Quaternion.identity);
+        }
+
+        // Right face (x = mountainWidth - 1)
+        for (int i = 0; i < restPlatformsPerSide; i++)
+        {
+            int randomHeight = restPlatformsPerSide * (i + 1);
+            float randomDepth = Random.Range(-mountainDepth / 2f + 1.5f, mountainDepth / 2f - 1.5f);
+            Vector3 position = new Vector3(startPosition.x + mountainWidth - 0.5f, randomHeight, randomDepth);
+            Instantiate(restPrefab, position, Quaternion.identity);
+        }
+
+        // Front face (z = 0)
+        for (int i = 0; i < restPlatformsPerSide; i++)
+        {
+            int randomHeight = restPlatformsPerSide * (i + 1);
+            float randomWidth = Random.Range(-mountainWidth / 2f + 1.5f , mountainWidth / 2f - 1.5f);
+            Vector3 position = new Vector3(randomWidth, randomHeight, startPosition.z - 0.5f);
+            Instantiate(restPrefab, position, Quaternion.identity);
+        }
+
+        // Back face (z = mountainDepth - 1)
+        for (int i = 0; i < restPlatformsPerSide; i++)
+        {
+            int randomHeight = restPlatformsPerSide * (i + 1);
+            float randomWidth = Random.Range(-mountainWidth / 2f + 1.5f, mountainWidth / 2f - 1.5f); ;
+            Vector3 position = new Vector3(randomWidth, randomHeight, startPosition.z + mountainDepth - 0.5f);
+            Instantiate(restPrefab, position, Quaternion.identity);
+        }
     }
 
     void PlaceCharacters()
     {
-        // TODO: Implement logic for placing characters
+
     }
 
     // Function to determine if the cube is on the outer layer
