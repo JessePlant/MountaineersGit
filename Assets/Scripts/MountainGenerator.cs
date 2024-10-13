@@ -42,7 +42,7 @@ public class MountainGenerator : MonoBehaviour
         // Calculate the starting position to center the mountain at (0, 0, 0)
         Vector3 startPosition = new(
             -mountainWidth * cubeSize / 2f,
-            0, // Keep the y position at 0 for the base
+            0.5f, // Keep the y position at 0 for the base
             -mountainDepth * cubeSize / 2f
         );
 
@@ -115,7 +115,7 @@ public class MountainGenerator : MonoBehaviour
         // Define the positions for the rest platforms on each side
         Vector3 startPosition = new Vector3(
             -mountainWidth * cubeSize / 2f,
-            0,
+            0.5f,
             -mountainDepth * cubeSize / 2f
         );
 

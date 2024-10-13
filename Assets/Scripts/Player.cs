@@ -72,6 +72,7 @@ public class Player : MonoBehaviour
     private float minGroundDotProduct, minStairsDotProduct, minClimbDotProduct;
 
     private PhysicalState physicalState;
+    private PlayerState previousState = PlayerState.CLIMBING;
 
     MeshRenderer meshRenderer;
     #endregion
@@ -116,7 +117,7 @@ public class Player : MonoBehaviour
 
     public void SetClimbing(bool climbing)
     {
-        isClimbingRequested = climbing;
+        isClimbingRequested = climbing && playerState != PlayerState.RESTING;
     }
 
     public void MovePlayer(Vector2 movement, bool jump)
@@ -164,7 +165,24 @@ public class Player : MonoBehaviour
             playerRigidbody.useGravity = true;
         }
 
-        
+        if (Physics.Raycast(playerRigidbody.position, Vector3.up, out var hit1, 3f) && Physics.Raycast(playerRigidbody.position, Vector3.down, out var hit2, 3f))
+        {
+            if (hit1.collider.CompareTag("Rest Platform") && hit2.collider.CompareTag("Rest Platform"))
+            {
+                previousState = playerState;
+                playerState = PlayerState.RESTING;
+                physicalState.RegenerateStamina();
+            }
+            else
+            {
+                playerState = previousState;
+            }
+
+        }
+        else
+        {
+            playerState = previousState;
+        }
 
     }
 
@@ -212,6 +230,8 @@ public class Player : MonoBehaviour
         {
             physicalState.ConsumeStamina();
         }
+
+        
 
         lastPosition = playerRigidbody.position;
         isClimbingRequested &= !physicalState.IsOutOfStamina;
@@ -425,8 +445,7 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         EvaluateCollision(collision);
-        print(collision.collider.tag);
-        if (collision.collider.CompareTag("Ground") && lastVelocity.y < 0f)
+        if (collision.collider.CompareTag("Ground") &&  lastVelocity.y < 0f)
         {
             float impactForce = lastVelocity.magnitude;
             float damageThreshold = 8f;
