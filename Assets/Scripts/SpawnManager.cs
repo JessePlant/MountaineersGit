@@ -34,6 +34,7 @@ public class SpawnManager : MonoBehaviour
       {
         print("Spawning");
         Vector3 spawnlocation = getPossibleSpawnLocationBelow();
+
         Instantiate(enemyPrefab,spawnlocation,Quaternion.identity);
         StartCoroutine(SpawnMore());
       }  
@@ -48,7 +49,6 @@ public class SpawnManager : MonoBehaviour
     {
        return Vector3.up;
     }
-    
     Vector3 getPossibleSpawnLocationBelow()
     {
 

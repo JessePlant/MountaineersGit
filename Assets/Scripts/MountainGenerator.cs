@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class MountainGenerator : MonoBehaviour
@@ -19,11 +20,16 @@ public class MountainGenerator : MonoBehaviour
     [SerializeField] private Vector3 colliderSizeMultiplier = new(1f, 1f, 1f); // Size multiplier for the BoxCollider
     [SerializeField] private Vector3 colliderCenterOffset = Vector3.zero; // Offset for the BoxCollider center
 
+    public NavMeshSurface leftNavMesh;
+    public NavMeshSurface rightNavMesh;
+    public NavMeshSurface frontNavMesh;
+    public NavMeshSurface backNavMesh;
     private void Start()
     {
         BuildMountain();
         CreateRestPlatforms();
         PlaceCharacters();
+        Rebake();
     }
 
     void BuildMountain()
@@ -167,5 +173,12 @@ public class MountainGenerator : MonoBehaviour
         return x == 0 || x == mountainWidth - 1 ||
                y == 0 || y == mountainHeight - 1 ||
                z == 0 || z == mountainDepth - 1;
+    }
+    void Rebake()
+    {
+        leftNavMesh.BuildNavMesh();
+        rightNavMesh.BuildNavMesh();
+        frontNavMesh.BuildNavMesh();
+        backNavMesh.BuildNavMesh();
     }
 }
