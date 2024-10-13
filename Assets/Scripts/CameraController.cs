@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
         Camera.main.orthographicSize = cameraSize;
         
         //Here some logicc to find centre of mountain. 
-        mountMid = new Vector3 (7.5f, 0.5f, 7.5f);
+        mountMid = new Vector3 (0, 0.5f, 0);
         Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this with the current wall surface normal force direction times5. ie opposite direction player facing.
         //screenTopY = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
 
@@ -43,7 +43,7 @@ public class CameraController : MonoBehaviour
         if(onGert)
         {
             targ1Pos = target1.transform.position;
-            mountMid = new Vector3(7.5f, targ1Pos.y, 7.5f);
+            mountMid = new Vector3(0, targ1Pos.y, 0);
             Vector3 Dir = mountMid-targ1Pos;
             if (Physics.Raycast(target1.transform.position, Dir, out Hit ))
             {
@@ -55,7 +55,7 @@ public class CameraController : MonoBehaviour
         else
         {
             targ2Pos = target2.transform.position;
-            mountMid = new Vector3(7.5f, targ2Pos.y, 7.5f);
+            mountMid = new Vector3(0, targ2Pos.y, 0);
             Vector3 Dir = mountMid-targ2Pos;
             if (Physics.Raycast(target2.transform.position, Dir, out Hit ))
             {
