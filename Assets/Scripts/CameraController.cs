@@ -43,6 +43,7 @@ public class CameraController : MonoBehaviour
         if(onGert)
         {
             targ1Pos = target1.transform.position;
+            mountMid = new Vector3(7.5f, targ1Pos.y, 7.5f);
             Vector3 Dir = mountMid-targ1Pos;
             if (Physics.Raycast(target1.transform.position, Dir, out Hit ))
             {
@@ -54,6 +55,7 @@ public class CameraController : MonoBehaviour
         else
         {
             targ2Pos = target2.transform.position;
+            mountMid = new Vector3(7.5f, targ2Pos.y, 7.5f);
             Vector3 Dir = mountMid-targ2Pos;
             if (Physics.Raycast(target2.transform.position, Dir, out Hit ))
             {
