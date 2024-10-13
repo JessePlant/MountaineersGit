@@ -39,7 +39,7 @@ public class EnemyBehaviour : MonoBehaviour
         EmilyState = GameObject.Find("Emily").GetComponent<PhysicalState>();
         attackController = GameObject.Find("AttackController").GetComponent<AttackController>();
         agent.autoTraverseOffMeshLink = true;
-        attackRange = 1f;
+        attackRange = 1.5f;
         alreadyAttacked = false;
         RandomTarget = Random.Range(0, 2);
         if(RandomTarget == 0){
