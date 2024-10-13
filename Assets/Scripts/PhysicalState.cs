@@ -17,7 +17,7 @@ public class PhysicalState : MonoBehaviour
     [SerializeField] private Vector3 healthBarOffset;
 
     [Header("Stamina Values")]
-    [SerializeField] private float currentStamina = 100f;
+    [SerializeField] public float currentStamina = 100f;
     [SerializeField] private float staminaRegenerationRate = 10f;
     [SerializeField] private float maximumStamina = 100f;
     [SerializeField] private float movementStaminaCost = 10f;
@@ -48,7 +48,6 @@ public class PhysicalState : MonoBehaviour
 
         healthBar.transform.rotation = camera.transform.rotation;
         staminaBar.transform.rotation = camera.transform.rotation;
-        RegenStamina(cameraController);
         staminaBar.value = currentStamina;
         healthBar.value = currentHealth;
     }

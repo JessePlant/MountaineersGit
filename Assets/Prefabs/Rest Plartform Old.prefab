@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 4984647245354837686}
   - component: {fileID: 8685211238127710344}
   m_Layer: 0
-  m_Name: Rest Plartform
+  m_Name: Rest Plartform Old
   m_TagString: Rest Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
