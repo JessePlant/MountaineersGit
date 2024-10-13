@@ -27,9 +27,6 @@ public class ChangeScene : MonoBehaviour
         {
             Debug.Log("Active");
         }
-        
-    
-
     }
     public void OpenPlayerDead()
     {
@@ -44,5 +41,13 @@ public class ChangeScene : MonoBehaviour
     public void BackToTitle()
     {
         SceneManager.LoadScene("Title");
+    }
+   public void QuitGame()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
