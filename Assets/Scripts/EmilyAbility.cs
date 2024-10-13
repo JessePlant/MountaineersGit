@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class EmilyAbility : MonoBehaviour
 {
-    public float heal = 10;
+    public float heal = 30;
     public CameraController cameraController;
     public bool isOnCooldown = false;
+    public PhysicalState gert;
+    public PhysicalState emily;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,20 +18,22 @@ public class EmilyAbility : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!cameraController.onGert){
         if(!isOnCooldown)
         {
             Heal();
+        }
         }
     }
 
     void Heal()
     {
         if (Input.GetKeyDown(KeyCode.G)) { 
-         HealthManager.Ghealth += heal;
+         gert.currentHealth += heal;
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            HealthManager.Ehealth += heal;
+            emily.currentHealth += heal;
         }
         StartCoroutine(Cooldown());
     }
