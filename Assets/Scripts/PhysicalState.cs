@@ -48,7 +48,6 @@ public class PhysicalState : MonoBehaviour
 
         healthBar.transform.rotation = camera.transform.rotation;
         staminaBar.transform.rotation = camera.transform.rotation;
-        RegenStamina(cameraController);
         staminaBar.value = currentStamina;
         healthBar.value = currentHealth;
     }
