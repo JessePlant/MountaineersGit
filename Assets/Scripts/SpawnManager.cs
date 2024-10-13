@@ -9,11 +9,11 @@ public class SpawnManager : MonoBehaviour
     public float lastPos;
     float incrSpawnHeight = 30;
     public CameraController cam;
-    public CharacterController character;
     public GameObject enemyPrefab;
     public float respawnSpeed;
     Vector3 gertPos;
     Vector3 EmilyPos;
+    public bool ReadyToSpawn = true;
 
     
 
@@ -21,7 +21,6 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         cam = GameObject.Find("Main Camera").GetComponent<CameraController>();
-        character = GameObject.Find("Gert").GetComponent<CharacterController>();
         respawnSpeed = 5f;
         gertPos = cam.target1.transform.position;
         EmilyPos = cam.target2.transform.position;
@@ -30,12 +29,13 @@ public class SpawnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      if(gertPos.y > 20)
+      print("SpawnManager "+gertPos.y);
+      if(cam.target1.transform.position.y > 5 && ReadyToSpawn)
       {
+        print("Spawning");
         Vector3 spawnlocation = getPossibleSpawnLocationBelow();
         Instantiate(enemyPrefab,spawnlocation,Quaternion.identity);
         StartCoroutine(SpawnMore());
-        increaseRespawnSpeed();
       }  
     }
     IEnumerator Normalspawn()
@@ -52,20 +52,22 @@ public class SpawnManager : MonoBehaviour
     Vector3 getPossibleSpawnLocationBelow()
     {
 
-        int UpOrDown = Random.Range(0, 1);
-        int GorE = Random.Range(0, 1);
-        Vector3 spawnLocation = new Vector3();
+        int UpOrDown = Random.Range(0, 2);
+        print("UpOrDown: "+UpOrDown);
+        int GorE = Random.Range(0, 2);
+        print("GorE: "+GorE);	
+        Vector3 spawnLocation;
         if(UpOrDown == 0)
         {
             if(GorE == 0)
             {
-                gertPos.y -= 5;
+                gertPos.y -= 4f;
                 spawnLocation = gertPos;
                 return spawnLocation;
             }
             else
             {
-                EmilyPos.y -= 5;
+                EmilyPos.y -= 4f;
                 spawnLocation = EmilyPos;
                 return spawnLocation;
             }
@@ -89,8 +91,11 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnMore()
     {
+        ReadyToSpawn = false;
         lastPos = gertPos.y;
         yield return new WaitForSecondsRealtime(respawnSpeed);
+        ReadyToSpawn = true;
+        increaseRespawnSpeed();
     }
     void increaseRespawnSpeed()
     {

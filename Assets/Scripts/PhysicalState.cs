@@ -27,7 +27,7 @@ public class PhysicalState : MonoBehaviour
     [SerializeField] private float healthRegenerationRate = 10f;
     [SerializeField] private float maximumHealth = 100f;
     [SerializeField] private float healthDamage = 10f;
-
+    [SerializeField] private CameraController cameraController;
 
 
     public bool IsAlive => currentHealth > 0;
@@ -48,7 +48,7 @@ public class PhysicalState : MonoBehaviour
 
         healthBar.transform.rotation = camera.transform.rotation;
         staminaBar.transform.rotation = camera.transform.rotation;
-
+        RegenStamina(cameraController);
         staminaBar.value = currentStamina;
         healthBar.value = currentHealth;
     }

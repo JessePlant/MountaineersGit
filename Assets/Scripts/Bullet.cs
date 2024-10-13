@@ -18,6 +18,7 @@ public class Bullet : MonoBehaviour
     //public float damage = 10;
     public bool didHit; 
     EnemyBehaviour e;
+    public GameObject relativeToPlayer;
     
     // Start is called before the first frame update
     void Start()
@@ -25,10 +26,11 @@ public class Bullet : MonoBehaviour
         cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
         gert = GameObject.Find("Gert").GetComponent<Transform>();
         attackController = GameObject.Find("AttackController").GetComponent<AttackController>();
+        relativeToPlayer = GameObject.Find("Player");
         dir = calcDirection(cameraController);
-        dir.z = gert.transform.position.z;
+        print("Camera thinks"+ cameraController.target1.transform.position);
+        print(gert.transform.position);
         print("Direction: "+dir);
-        didHit = hitEnemy(gert);
     }
 
     // Update is called once per frame
@@ -66,9 +68,13 @@ public class Bullet : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        if(didHit && collision.gameObject.tag == "Enemy"){
+        print("Collided");
+        print("Tag"+collision.gameObject.tag);
+        if(collision.gameObject.tag.Equals("Enemy")){
+            print("Hit Enemy");
+            e = collision.gameObject.GetComponent<EnemyBehaviour>();
             e.TakeDamage(attackController.currentGun.attackDamage);
-            Destroy(gameObject);
         }   
+        Destroy(gameObject);
     }
 }

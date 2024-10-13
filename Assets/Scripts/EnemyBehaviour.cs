@@ -13,7 +13,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     public Transform Emily;
     public float moveSpeed;
-    public float timeBetweenAttacks = 5f;
+    public float timeBetweenAttacks = 2f;
     public bool alreadyAttacked;
     public float attackRange;
     public bool inAttackRange;
@@ -41,7 +41,7 @@ public class EnemyBehaviour : MonoBehaviour
         agent.autoTraverseOffMeshLink = true;
         attackRange = 1f;
         alreadyAttacked = false;
-        RandomTarget = Random.Range(0, 1);
+        RandomTarget = Random.Range(0, 2);
         if(RandomTarget == 0){
             target = Gert;
             Debug.Log("Current Target is Gert");

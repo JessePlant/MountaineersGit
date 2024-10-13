@@ -21,7 +21,7 @@ public class AttackController : MonoBehaviour
     public float pulseSpeed = 1f;
     public List<float> cooldownTimes;
     public bool isReloading;
-    public Vector2 instantiatePos;
+    public Vector3 instantiatePos;
     
     void Start()
     {
@@ -56,8 +56,9 @@ public class AttackController : MonoBehaviour
                 {
                     print("Gert Pos"+cameraController.target1.transform.position);   
                     worldPos = hit.point;
-                    instantiatePos = new Vector2(cameraController.target1.transform.position.x, cameraController.target1.transform.position.y+0.5f);
-                    print("Hit Pos"+worldPos);
+                    instantiatePos = new Vector3(cameraController.target1.transform.position.x, cameraController.target1.transform.position.y+0.4f,cameraController.target1.transform.position.z);
+                    print("Instantiate Pos"+ instantiatePos);
+                    print("Hit Pos"+ worldPos);
                     Instantiate(bulletPrefab, instantiatePos, Quaternion.identity);
                 }
                 else
