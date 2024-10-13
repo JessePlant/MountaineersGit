@@ -29,6 +29,7 @@ public class AttackController : MonoBehaviour
         inGameUI.gameObject.SetActive(true);
         reloadingText.gameObject.SetActive(false);
         isReloading = false;
+        cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
     }
 
     // Update is called once per frame
@@ -40,9 +41,9 @@ public class AttackController : MonoBehaviour
         Shoot(cameraController);
         }
     }
-    public void Shoot(CameraController camera)
+    public void Shoot(CameraController cameraController)
     {
-        if (camera.onGert)
+        if (cameraController.onGert)
         {
             if (Input.GetMouseButtonDown(0) && !isReloading)
             {
@@ -53,9 +54,9 @@ public class AttackController : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
-                    print("Gert Pos"+camera.target1.transform.position);   
+                    print("Gert Pos"+cameraController.target1.transform.position);   
                     worldPos = hit.point;
-                    instantiatePos = new Vector2(camera.target1.transform.position.x, camera.target1.transform.position.y+0.5f);
+                    instantiatePos = new Vector2(cameraController.target1.transform.position.x, cameraController.target1.transform.position.y+0.5f);
                     print("Hit Pos"+worldPos);
                     Instantiate(bulletPrefab, instantiatePos, Quaternion.identity);
                 }

@@ -12,7 +12,7 @@ public class EmilyAbility : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
     }
 
     // Update is called once per frame

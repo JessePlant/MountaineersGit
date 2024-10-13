@@ -913,7 +913,8 @@ Transform:
   m_LocalPosition: {x: 315.49414, y: 243.35211, z: 23.722534}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 929661600}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &513263257
@@ -957,6 +958,7 @@ MonoBehaviour:
   pulseSpeed: 1
   cooldownTimes: []
   isReloading: 0
+  instantiatePos: {x: 0, y: 0}
 --- !u!4 &513263259
 Transform:
   m_ObjectHideFlags: 0
@@ -2048,12 +2050,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929661598}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.8299508, y: 4.1639733, z: 33.458736}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -318.3241, y: -239.18814, z: 9.736202}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 401227254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &943171787 stripped
 MonoBehaviour:
@@ -2607,8 +2609,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heal: 10
-  cameraController: {fileID: 0}
+  cameraController: {fileID: 1611311565}
   isOnCooldown: 0
+  gert: {fileID: 1966962917}
+  emily: {fileID: 85127006}
 --- !u!4 &1247368982
 Transform:
   m_ObjectHideFlags: 0
@@ -4370,7 +4374,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Continue
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4814,7 +4818,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2123932491}
   - component: {fileID: 2123932490}
-  - component: {fileID: 2123932489}
   m_Layer: 0
   m_Name: MountainController
   m_TagString: Untagged
@@ -4822,29 +4825,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2123932489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2123932488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 954ab55d8e71a3e4691a03849ccfd9ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cubePrefab: {fileID: 73666901626324975, guid: c6db40491ef1ecc40a48045040f5d072, type: 3}
-  Gert: {fileID: 0}
-  Location: {fileID: 0}
-  length: 15
-  height: 10
-  spacing: 1
-  Up: {fileID: 0}
-  Left: {fileID: 0}
-  Right: {fileID: 0}
-  Back: {fileID: 0}
-  ThroughScreen: {fileID: 0}
 --- !u!114 &2123932490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5013,7 +4993,6 @@ SceneRoots:
   - {fileID: 1647298031}
   - {fileID: 312903506}
   - {fileID: 717357423}
-  - {fileID: 929661600}
   - {fileID: 401227254}
   - {fileID: 1247368982}
   - {fileID: 1780938894}
