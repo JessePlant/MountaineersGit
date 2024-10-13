@@ -231,13 +231,13 @@ MonoBehaviour:
   probeDistance: 1
   probeMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 819
   stairsMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 256
   climbMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 307
   normalMaterial: {fileID: 0}
   climbingMaterial: {fileID: 0}
 --- !u!54 &85127008
@@ -3401,7 +3401,7 @@ GameObject:
   - component: {fileID: 1647298032}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4544,13 +4544,13 @@ MonoBehaviour:
   probeDistance: 1
   probeMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 819
   stairsMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 256
   climbMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 307
   normalMaterial: {fileID: 0}
   climbingMaterial: {fileID: 0}
 --- !u!54 &1966962919
