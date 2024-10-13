@@ -6,6 +6,9 @@ public class MountainGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject climbablePrefab; // Prefab for climbable cubes
     [SerializeField] private GameObject unclimbablePrefab; // Prefab for unclimbable cubes
+    [SerializeField] private GameObject restPrefab; // Prefab for rest cubes
+    [SerializeField] private GameObject gertPrefab; // Prefab for Gert
+    [SerializeField] private GameObject emilyPrefab; // Prefab for Emily
     [SerializeField] private int mountainHeight = 10; // Number of cubes along height
     [SerializeField] private int mountainWidth = 10; // Number of cubes along width
     [SerializeField] private int mountainDepth = 10; // Number of cubes along depth
@@ -16,6 +19,8 @@ public class MountainGenerator : MonoBehaviour
     private void Start()
     {
         BuildMountain();
+        CreateRestPlatforms();
+        PlaceCharacters();
     }
 
     void BuildMountain()
@@ -29,10 +34,10 @@ public class MountainGenerator : MonoBehaviour
         }
 
         // Create the parent object for the mountain
-        GameObject mountainParent = new GameObject("Mountain");
+        GameObject mountainParent = new("Mountain");
 
         // Calculate the starting position to center the mountain at (0, 0, 0)
-        Vector3 startPosition = new Vector3(
+        Vector3 startPosition = new(
             -mountainWidth * cubeSize / 2f,
             0, // Keep the y position at 0 for the base
             -mountainDepth * cubeSize / 2f
@@ -83,6 +88,29 @@ public class MountainGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    void CreateRestPlatforms()
+    {
+        // TODO: Implement your logic for creating rest platforms if necessary
+    }
+
+    void PlaceCharacters()
+    {
+        // Calculate the base position for Gert and Emily
+        Vector3 basePosition = new Vector3(
+            -mountainWidth * cubeSize / 2f,
+            0f, // Y position at the base of the mountain
+            -mountainDepth * cubeSize / 2f
+        );
+
+        // Offset positions slightly to place them apart
+        Vector3 gertPosition = basePosition + new Vector3(1f, 0f, 1f); // Offset for Gert
+        Vector3 emilyPosition = basePosition + new Vector3(-1f, 0f, 1f); // Offset for Emily
+
+        // Instantiate Gert and Emily at the calculated positions
+        Instantiate(gertPrefab, gertPosition, Quaternion.identity);
+        Instantiate(emilyPrefab, emilyPosition, Quaternion.identity);
     }
 
     // Function to determine if the cube is on the outer layer
