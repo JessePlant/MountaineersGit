@@ -74,7 +74,7 @@ public class Bullet : MonoBehaviour
             print("Hit Enemy");
             e = collision.gameObject.GetComponent<EnemyBehaviour>();
             e.TakeDamage(attackController.currentGun.attackDamage);
+            Destroy(gameObject);
         }   
-        Destroy(gameObject);
     }
 }
