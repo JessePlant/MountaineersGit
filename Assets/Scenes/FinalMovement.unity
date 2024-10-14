@@ -242,6 +242,8 @@ MonoBehaviour:
     m_Bits: 307
   normalMaterial: {fileID: 0}
   climbingMaterial: {fileID: 0}
+  Gert: {fileID: 0}
+  Emily: {fileID: 0}
 --- !u!54 &85127008
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -755,6 +757,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cs: {fileID: 0}
   gameOverCanvas: {fileID: 0}
+  gert: {fileID: 0}
+  emily: {fileID: 0}
   chained: {fileID: 312903507}
   gOver: 0
   enemyBehaviour: {fileID: 0}
@@ -1649,7 +1653,7 @@ Transform:
   m_GameObject: {fileID: 776524497}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.11, y: -0.27, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.38, y: 0.38, z: 0.38}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -3560,6 +3564,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onGert: 0
   screenTopY: 0
+  EmilySprite: {fileID: 0}
+  GertSprite: {fileID: 0}
   scrollThreshold: 1
   scrollSpeed: 5
   smoothSpeed: 0.125
@@ -4964,6 +4970,8 @@ MonoBehaviour:
     m_Bits: 307
   normalMaterial: {fileID: 0}
   climbingMaterial: {fileID: 0}
+  Gert: {fileID: 0}
+  Emily: {fileID: 0}
 --- !u!54 &1966962919
 Rigidbody:
   m_ObjectHideFlags: 0

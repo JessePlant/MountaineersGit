@@ -45,6 +45,8 @@ public class CameraController : MonoBehaviour
         }
         EmilySprite.transform.LookAt(target2.transform.position);
         GertSprite.transform.LookAt(target1.transform.position);
+        
+        
         if(onGert)
         {
             targ1Pos = target1.transform.position;
@@ -54,6 +56,7 @@ public class CameraController : MonoBehaviour
             {
                 GertSprite.transform.position = targ1Pos + Hit.normal.normalized*0.1f;
                 Camera.main.transform.position = targ1Pos + Hit.normal.normalized*13; //Hit.normal is direction we need camera to move from player.
+                target1.transform.forward = -Hit.normal;
             }
             Camera.main.transform.LookAt(targ1Pos);
             //Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this as above.
@@ -67,6 +70,7 @@ public class CameraController : MonoBehaviour
             {
                 EmilySprite.transform.position = targ2Pos + Hit.normal.normalized*0.1f;
                 Camera.main.transform.position = targ2Pos + Hit.normal*13;
+                target2.transform.forward = -Hit.normal;
             }
             Camera.main.transform.LookAt(targ2Pos);
             //Camera.main.transform.position = target2.transform.position + new Vector3(0,0,-17);

@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     #region Data Members
     private Player activePlayer;
     public ChangeScene cs;
-    public GameObject gameOverCanvas;
+    public GameObject gameOverCanvas, gert, emily;
 
     private Vector2 playerMovement;
     private bool isJumpRequested;
@@ -33,8 +33,10 @@ public class PlayerController : MonoBehaviour
         gameOverCanvas = GameObject.Find("GameOverScreen");
         gameOverCanvas.SetActive(false);
         playerGamrObject = GameObject.Find("Player");
-        Gert = GameObject.Find("Gert").GetComponent<Player>();
-        Emily = GameObject.Find("Emily").GetComponent<Player>();
+        gert = GameObject.Find("Gert");
+        Gert = gert.GetComponent<Player>();
+        emily = GameObject.Find("Emily");
+        Emily = emily.GetComponent<Player>();
         chained.SetPosition(0, Gert.transform.position);
         chained.SetPosition(1, Emily.transform.position);
         activePlayer = Gert;
@@ -63,7 +65,15 @@ public class PlayerController : MonoBehaviour
 
         if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
         {
-            activePlayer.MovePlayer(playerMovement, isJumpRequested);
+            if(activePlayer == Gert)
+            {
+                activePlayer.MovePlayer(playerMovement, isJumpRequested, gert);
+            }
+            else
+            {
+                activePlayer.MovePlayer(playerMovement, isJumpRequested, emily);
+            }
+            
         }
         else
         {

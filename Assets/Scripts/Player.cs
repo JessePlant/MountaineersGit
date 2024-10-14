@@ -80,6 +80,8 @@ public class Player : MonoBehaviour
     #endregion
 
 
+    public GameObject Gert, Emily;
+
     #region Properties 
     public PlayerState State
     {
@@ -105,6 +107,8 @@ public class Player : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         lastPosition = lastVelocity = Vector3.zero;
         OnValidate();
+        Gert = GameObject.Find("Gert");
+        Emily = GameObject.Find("Emily");
     }
 
      private void OnValidate()
@@ -120,21 +124,27 @@ public class Player : MonoBehaviour
         isClimbingRequested = climbing && playerState != PlayerState.RESTING;
     }
 
-    public void MovePlayer(Vector2 movement, bool jump)
+    public void MovePlayer(Vector2 movement, bool jump, GameObject playa)
     {
         movementInput = movement;
 
         if (inputSpace)
         {
-            rightAxis = ProjectDirectionOnPlane(inputSpace.right, upAxis);
+            
+            
+            rightAxis = ProjectDirectionOnPlane(playa.transform.right, upAxis);
             forwardAxis =
-                ProjectDirectionOnPlane(inputSpace.forward, upAxis);
+                ProjectDirectionOnPlane(playa.transform.up, upAxis);
             
         }
         else
         {
-            rightAxis = ProjectDirectionOnPlane(Vector3.right, upAxis);
+            rightAxis = ProjectDirectionOnPlane(playa.transform.right, upAxis);
+            forwardAxis = ProjectDirectionOnPlane(playa.transform.forward, upAxis);
+            
+            /*rightAxis = ProjectDirectionOnPlane(Vector3.right, upAxis);
             forwardAxis = ProjectDirectionOnPlane(Vector3.forward, upAxis);
+            */
         }
 
         isJumpRequested |= jump;
