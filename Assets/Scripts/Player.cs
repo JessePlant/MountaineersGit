@@ -157,6 +157,7 @@ public class Player : MonoBehaviour
         if (!physicalState.IsAlive)
         {
             playerState = PlayerState.DEAD;
+            return;
         }
 
         if (physicalState.IsOutOfStamina && !OnGround)
@@ -193,6 +194,11 @@ public class Player : MonoBehaviour
 
         UpdateState();
         AdjustVelocity();
+
+        if (!Climbing && playerState == PlayerState.CLIMBING && OnGround)
+        {
+            physicalState.RegenerateStamina();
+        } 
 
         if (isJumpRequested)
         {

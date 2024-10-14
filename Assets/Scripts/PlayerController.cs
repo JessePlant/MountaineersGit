@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
             gameOverCanvas.SetActive(true);
             cs.OpenGameWinCanvas();
         }
-        if(Gert.State == Player.PlayerState.DEAD)
+        if(Gert.State == Player.PlayerState.DEAD || Emily.State == Player.PlayerState.DEAD)
         {
             cs.OpenPlayerDead();
         }
