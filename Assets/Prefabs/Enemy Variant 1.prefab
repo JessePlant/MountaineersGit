@@ -209,6 +209,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy Variant 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5854702688934075811, guid: 9c3615ec4b1e56b4ba27d091c56cf8af, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 6886188056269719127, guid: 9c3615ec4b1e56b4ba27d091c56cf8af, type: 3}
       propertyPath: healthBar
       value: 
