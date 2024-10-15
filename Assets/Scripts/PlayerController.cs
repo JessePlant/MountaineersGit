@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public GameObject gameOverCanvas, gert, emily;
     [Header("Movement")]
     [SerializeField] private float maxDistanceBetweenPlayers = 2.5f; // Maximum distance allowed between Emily and Gert
+    private float oldDistance = float.PositiveInfinity;
 
 
     private Vector2 playerMovement;
@@ -62,16 +63,18 @@ public class PlayerController : MonoBehaviour
 
         ///===================
         // Calculate the potential next position for the active player
-        Vector3 nextPosition = activePlayer.transform.position + activePlayer.maxGroundSpeed * Time.deltaTime * new Vector3(playerMovement.x, 0, playerMovement.y);
 
+        Vector3 nextPosition = activePlayer.transform.position + new Vector3(playerMovement.x, 0, playerMovement.y);
+        print(activePlayer.transform.position + " Is active");
         // Calculate the distance between Gert and Emily if activePlayer moves
         float currentDistance = Vector3.Distance(Gert.transform.position, Emily.transform.position);
         float newDistance = Vector3.Distance(nextPosition, inactivePlayer.transform.position);
+        print(activePlayer.transform.position + " Is active");
+
 
         // Check if the new distance exceeds the maximum allowed distance
-        if (newDistance <= maxDistanceBetweenPlayers)
+        if (newDistance < maxDistanceBetweenPlayers || newDistance < currentDistance)
         {
-            print("New Distance " + newDistance + " m");
             if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
             {
                 activePlayer.MovePlayer(playerMovement, isJumpRequested, inactivePlayer.gameObject);
