@@ -460,6 +460,19 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.CompareTag("Player"))
+        {
+            Rigidbody otherRigidbody = collision.collider.GetComponent<Rigidbody>();
+
+            // Make both rigidbodies kinematic to prevent pushing
+            if (otherRigidbody != null)
+            {
+                otherRigidbody.isKinematic = true;
+                playerRigidbody.isKinematic = true;
+                return;
+            }
+        }
+
         EvaluateCollision(collision);
         if (collision.collider.CompareTag("Ground") &&  lastVelocity.y < 0f)
         {
@@ -480,6 +493,21 @@ public class Player : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         EvaluateCollision(collision);
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            Rigidbody otherRigidbody = collision.collider.GetComponent<Rigidbody>();
+
+            // Re-enable physics interaction
+            if (otherRigidbody != null)
+            {
+                otherRigidbody.isKinematic = false;
+                playerRigidbody.isKinematic = false;
+            }
+        }
     }
 
     void EvaluateCollision(Collision collision)
