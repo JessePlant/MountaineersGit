@@ -37,6 +37,12 @@ public class ChangeScene : MonoBehaviour
         gameOverText.text = "You died. Better luck summiting in the next life...";
         
     }
+
+    public void gotoCutscene()
+    {
+        SceneManager.LoadScene("OpeningCutscene");
+        Debug.Log("Play button pressed, loading new scene");
+    }
     
     public void BackToTitle()
     {

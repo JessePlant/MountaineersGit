@@ -75,6 +75,9 @@ public class Player : MonoBehaviour
     private PhysicalState physicalState;
     private PlayerState previousState = PlayerState.CLIMBING;
 
+    private Animator GAnimator;
+    private Animator EAnimator;
+    Vector3 restingVelocity = new Vector3(0, -20, 0);
     MeshRenderer meshRenderer;
     #endregion
 
@@ -102,6 +105,8 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        GAnimator = GameObject.Find("GertSprite").GetComponent<Animator>();
+        EAnimator = GameObject.Find("EmilySprite").GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
         physicalState = GetComponent<PhysicalState>();
         playerRigidbody.useGravity = false;
@@ -201,7 +206,21 @@ public class Player : MonoBehaviour
         {
             playerState = previousState;
         }
-
+        float Gspeed = checkMovement(Gert);
+        GAnimator.speed = Gspeed;
+        float Espeed = checkMovement(Emily);
+        EAnimator.speed = Espeed;
+    }
+    float checkMovement(GameObject character)
+    {
+        Rigidbody characterRigidbody = character.GetComponent<Rigidbody>();
+        if (characterRigidbody.velocity.magnitude < 1)
+        {
+            return 0;
+        }
+        else{
+            return 1;
+        }
     }
 
     void FixedUpdate()
