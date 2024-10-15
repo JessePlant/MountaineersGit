@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     #region Data Members
-    private Player activePlayer;
+    private Player activePlayer, inactivePlayer;
     public ChangeScene cs;
     public GameObject gameOverCanvas, gert, emily;
     [Header("Movement")]
@@ -16,9 +16,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 playerMovement;
     private bool isJumpRequested;
     private bool isClimbRequested;
-    //public LineRenderer chained;
     public bool gOver;
-    private GameObject playerGamrObject;
     #endregion
 
     #region Properties 
@@ -27,7 +25,7 @@ public class PlayerController : MonoBehaviour
  
     #endregion
     public EnemyBehaviour enemyBehaviour;
-    // Start is called before the first frame update
+
     void Start() 
     {
 
@@ -35,14 +33,12 @@ public class PlayerController : MonoBehaviour
         
         gameOverCanvas = GameObject.Find("GameOverScreen");
         gameOverCanvas.SetActive(false);
-        playerGamrObject = GameObject.Find("Player");
         gert = GameObject.Find("Gert");
         Gert = gert.GetComponent<Player>();
         emily = GameObject.Find("Emily");
         Emily = emily.GetComponent<Player>();
-        //chained.SetPosition(0, Gert.transform.position);
-        //chained.SetPosition(1, Emily.transform.position);
         activePlayer = Gert;
+        inactivePlayer = Emily;
         gOver = false;
 
     }
@@ -62,26 +58,15 @@ public class PlayerController : MonoBehaviour
         isClimbRequested = Input.GetButtonDown("Climb") ? !isClimbRequested : isClimbRequested;
 
         // update climbing state same time
-        Gert.SetClimbing(isClimbRequested);
-        Emily.SetClimbing(isClimbRequested);
-
+        activePlayer.SetClimbing(isClimbRequested);
 
         ///===================
         // Calculate the potential next position for the active player
-    Vector3 nextPosition = activePlayer.transform.position + new Vector3(playerMovement.x, 0, playerMovement.y) * Time.deltaTime * activePlayer.maxGroundSpeed;
+        Vector3 nextPosition = activePlayer.transform.position + activePlayer.maxGroundSpeed * Time.deltaTime * new Vector3(playerMovement.x, 0, playerMovement.y);
 
-    // Calculate the distance between Gert and Emily if activePlayer moves
+        // Calculate the distance between Gert and Emily if activePlayer moves
         float currentDistance = Vector3.Distance(Gert.transform.position, Emily.transform.position);
-        float newDistance;
-
-        if(activePlayer == Gert)
-    {
-            newDistance = Vector3.Distance(nextPosition, Emily.transform.position);
-        }
-    else
-        {
-            newDistance = Vector3.Distance(Gert.transform.position, nextPosition);
-        }
+        float newDistance = Vector3.Distance(nextPosition, inactivePlayer.transform.position);
 
         // Check if the new distance exceeds the maximum allowed distance
         if (newDistance <= maxDistanceBetweenPlayers)
@@ -89,15 +74,7 @@ public class PlayerController : MonoBehaviour
             print("New Distance " + newDistance + " m");
             if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
             {
-                if (activePlayer == Gert)
-                {
-                    activePlayer.MovePlayer(playerMovement, isJumpRequested, gert);
-                }
-                else
-                {
-                    activePlayer.MovePlayer(playerMovement, isJumpRequested, emily);
-                }
-
+                activePlayer.MovePlayer(playerMovement, isJumpRequested, inactivePlayer.gameObject);
             }
         }
         else
@@ -118,7 +95,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             activePlayer = activePlayer == Gert ? Emily : Gert;
-            //Gert.transform.position = new Vector3(0,203,0);
+            inactivePlayer = activePlayer == Gert ? Emily : Gert;
+            inactivePlayer.StopPlayer();
         }
 
         //if (Input.GetKeyDown(KeyCode.Space))
