@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     [SerializeField] Transform inputSpace = default; 
 
     [Header("Movement Settings")]
-    [SerializeField, Range(0f, 100f)] float maxGroundSpeed = 10f, maxClimbSpeed = 4f; 
+    [SerializeField, Range(0f, 100f)] public float maxGroundSpeed = 10f, maxClimbSpeed = 2f; 
     [SerializeField, Range(0f, 100f)] float groundAcceleration = 10f, maxAirAcceleration = 1f, maxClimbAcceleration = 40f;
 
     [Header("Jump Settings")]
@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
     [Header("Materials")]
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material climbingMaterial = default;
+
 
     // New variable to track velocity before hitting the ground
     private Vector3 lastVelocity, lastPosition;
@@ -126,6 +127,7 @@ public class Player : MonoBehaviour
 
     public void MovePlayer(Vector2 movement, bool jump, GameObject playa)
     {
+        playerRigidbody.isKinematic = false;
         movementInput = movement;
 
         if (inputSpace)
@@ -150,6 +152,11 @@ public class Player : MonoBehaviour
         isJumpRequested |= jump;
         isClimbingRequested = Input.GetButtonDown("Climb") ? !isClimbingRequested : isClimbingRequested;
 
+    }
+
+    public void StopPlayer()
+    {
+        playerRigidbody.isKinematic = true;
     }
 
     void Update()

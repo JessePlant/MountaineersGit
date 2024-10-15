@@ -9,11 +9,14 @@ public class PlayerController : MonoBehaviour
     private Player activePlayer;
     public ChangeScene cs;
     public GameObject gameOverCanvas, gert, emily;
+    [Header("Movement")]
+    [SerializeField] private float maxDistanceBetweenPlayers = 2.5f; // Maximum distance allowed between Emily and Gert
+
 
     private Vector2 playerMovement;
     private bool isJumpRequested;
     private bool isClimbRequested;
-    public LineRenderer chained;
+    //public LineRenderer chained;
     public bool gOver;
     private GameObject playerGamrObject;
     #endregion
@@ -37,8 +40,8 @@ public class PlayerController : MonoBehaviour
         Gert = gert.GetComponent<Player>();
         emily = GameObject.Find("Emily");
         Emily = emily.GetComponent<Player>();
-        chained.SetPosition(0, Gert.transform.position);
-        chained.SetPosition(1, Emily.transform.position);
+        //chained.SetPosition(0, Gert.transform.position);
+        //chained.SetPosition(1, Emily.transform.position);
         activePlayer = Gert;
         gOver = false;
 
@@ -63,27 +66,53 @@ public class PlayerController : MonoBehaviour
         Emily.SetClimbing(isClimbRequested);
 
 
-        if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
+        ///===================
+        // Calculate the potential next position for the active player
+    Vector3 nextPosition = activePlayer.transform.position + new Vector3(playerMovement.x, 0, playerMovement.y) * Time.deltaTime * activePlayer.maxGroundSpeed;
+
+    // Calculate the distance between Gert and Emily if activePlayer moves
+        float currentDistance = Vector3.Distance(Gert.transform.position, Emily.transform.position);
+        float newDistance;
+
+        if(activePlayer == Gert)
+    {
+            newDistance = Vector3.Distance(nextPosition, Emily.transform.position);
+        }
+    else
         {
-            if(activePlayer == Gert)
+            newDistance = Vector3.Distance(Gert.transform.position, nextPosition);
+        }
+
+        // Check if the new distance exceeds the maximum allowed distance
+        if (newDistance <= maxDistanceBetweenPlayers)
+        {
+            print("New Distance " + newDistance + " m");
+            if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
             {
-                activePlayer.MovePlayer(playerMovement, isJumpRequested, gert);
+                if (activePlayer == Gert)
+                {
+                    activePlayer.MovePlayer(playerMovement, isJumpRequested, gert);
+                }
+                else
+                {
+                    activePlayer.MovePlayer(playerMovement, isJumpRequested, emily);
+                }
+
             }
-            else
-            {
-                activePlayer.MovePlayer(playerMovement, isJumpRequested, emily);
-            }
-            
         }
         else
         {
-            //Destroy(Gert.gameObject);
-            //Destroy(Emily.gameObject);
-            //Destroy(playerGamrObject);
+            activePlayer.StopPlayer();
+            Debug.Log("Movement prevented: Distance between players would exceed the maximum allowed.");
         }
 
-        chained.SetPosition(0, Gert.transform.position);
-        chained.SetPosition(1, Emily.transform.position);
+        // Update the position of the chained line between Gert and Emily
+        //chained.SetPosition(0, Gert.transform.position);
+        //chained.SetPosition(1, Emily.transform.position);
+        /////====
+       
+        //chained.SetPosition(0, Gert.transform.position);
+        //chained.SetPosition(1, Emily.transform.position);
 
         //// Detect player switching
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -105,7 +134,7 @@ public class PlayerController : MonoBehaviour
         //    }
         //}
        
-        if(Gert.transform.position.y>200 || Emily.transform.position.y>200 || gOver==true)
+        if(Gert.transform.position.y>10 || Emily.transform.position.y>10 || gOver==true)
         {
             gOver=true;
             Debug.Log(gOver);
@@ -114,7 +143,8 @@ public class PlayerController : MonoBehaviour
         }
         if(Gert.State == Player.PlayerState.DEAD || Emily.State == Player.PlayerState.DEAD)
         {
-            cs.OpenPlayerDead();
+            //cs.OpenPlayerDead();
+            print("Dead");
         }
     }
     

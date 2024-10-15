@@ -131,7 +131,6 @@ public class MountainGenerator : MonoBehaviour
             int randomHeight = restPlatformsPerSide * (i + 1);
             float randomDepth = Random.Range(-mountainDepth / 2f + 1.5f, mountainDepth / 2f - 1.5f);
             Vector3 position = new Vector3(startPosition.x - 0.5f, randomHeight, randomDepth);
-            Instantiate(restPrefab, position, Quaternion.identity);
         }
 
         // Right face (x = mountainWidth - 1)
