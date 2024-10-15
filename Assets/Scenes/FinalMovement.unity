@@ -861,7 +861,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cs: {fileID: 0}
-  gameOverCanvas: {fileID: 0}
+  gameOverCanvas: {fileID: 1301855422}
   gert: {fileID: 0}
   emily: {fileID: 0}
   chained: {fileID: 312903507}
