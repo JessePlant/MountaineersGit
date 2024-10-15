@@ -283,7 +283,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2085447835220563285, guid: 9c3615ec4b1e56b4ba27d091c56cf8af, type: 3}
       propertyPath: m_Enabled
+<<<<<<< Updated upstream
       value: 0
+=======
+      value: 1
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 2637375036436244665, guid: 9c3615ec4b1e56b4ba27d091c56cf8af, type: 3}
       propertyPath: m_Speed
