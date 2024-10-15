@@ -207,7 +207,7 @@ public class Player : MonoBehaviour
     float checkMovement(GameObject character)
     {
         Rigidbody characterRigidbody = character.GetComponent<Rigidbody>();
-        if (characterRigidbody.velocity.magnitude == 0)
+        if (characterRigidbody.velocity.magnitude < 1)
         {
             return 0;
         }

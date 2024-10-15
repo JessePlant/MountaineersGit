@@ -9,11 +9,12 @@ public class SpawnManager : MonoBehaviour
     public float lastPos;
     float incrSpawnHeight = 30;
     public CameraController cam;
-    public GameObject enemyPrefab;
+    public GameObject enemyPrefab, EnemyVariant1;
     public float respawnSpeed;
     Vector3 gertPos;
     Vector3 EmilyPos;
     public bool ReadyToSpawn = true;
+
 
     
 
@@ -37,7 +38,15 @@ public class SpawnManager : MonoBehaviour
 
         Instantiate(enemyPrefab,spawnlocation,Quaternion.identity);
         StartCoroutine(SpawnMore());
-      }  
+      }
+
+      if(GameObject.Find("Enemy Variant 1(Clone)") == null){
+        return;
+      }	  
+      else{
+        EnemyVariant1 = GameObject.Find("Enemy Variant 1(Clone)");
+        EnemyVariant1.GetComponentInChildren<Transform>().LookAt(cam.target1.transform.position);
+      }
     }
     IEnumerator Normalspawn()
     {
@@ -56,35 +65,28 @@ public class SpawnManager : MonoBehaviour
         print("UpOrDown: "+UpOrDown);
         int GorE = Random.Range(0, 2);
         print("GorE: "+GorE);	
-        Vector3 spawnLocation;
         if(UpOrDown == 0)
         {
             if(GorE == 0)
             {
-                gertPos.y -= 4f;
-                spawnLocation = gertPos;
-                return spawnLocation;
+               return new Vector3(gertPos.x, gertPos.y - 4f, gertPos.z);
             }
             else
             {
-                EmilyPos.y -= 4f;
-                spawnLocation = EmilyPos;
-                return spawnLocation;
+
+                return new Vector3(EmilyPos.x, EmilyPos.y - 4f, EmilyPos.z);
             }
         }
         else
         {
             if(GorE == 0)
             {
-                gertPos.y += 5;
-                spawnLocation = gertPos;
-                return spawnLocation;
+
+                return new Vector3(gertPos.x, gertPos.y + 4f, gertPos.z);
             }
             else
             {
-                EmilyPos.y += 5;
-                spawnLocation = EmilyPos;
-                return spawnLocation;
+                return new Vector3(EmilyPos.x, EmilyPos.y + 4f, EmilyPos.z);
             }
         }
     }

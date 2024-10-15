@@ -59,7 +59,7 @@ public class AttackController : MonoBehaviour
                     instantiatePos = new Vector3(cameraController.target1.transform.position.x, cameraController.target1.transform.position.y+0.4f,cameraController.target1.transform.position.z);
                     print("Instantiate Pos"+ instantiatePos);
                     print("Hit Pos"+ worldPos);
-                    Instantiate(bulletPrefab, instantiatePos, Quaternion.identity);
+                    Instantiate(bulletPrefab, instantiatePos, cameraController.target1.transform.rotation);
                 }
                 else
                 {

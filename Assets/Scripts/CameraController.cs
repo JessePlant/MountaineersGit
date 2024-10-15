@@ -16,6 +16,7 @@ public class CameraController : MonoBehaviour
     public GameObject target1, target2;
 
     public Vector3 mountMid, targ1Pos, targ2Pos;
+    public bool Front = true;
     RaycastHit Hit; 
     void Start()
     {
@@ -59,6 +60,13 @@ public class CameraController : MonoBehaviour
                 target1.transform.forward = -Hit.normal;
             }
             Camera.main.transform.LookAt(targ1Pos);
+            if(Hit.normal == Vector3.left || Hit.normal == Vector3.right)
+            {
+                Front = false;
+            }
+            else{
+                Front = true;
+            }
             //Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this as above.
         }
         else
