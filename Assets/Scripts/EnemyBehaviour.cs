@@ -32,6 +32,9 @@ public class EnemyBehaviour : MonoBehaviour
     public float currentHealth = 30f;
     public bool canMove = true;
     void Awake(){
+        if(transform.position.y < 0){
+            Destroy(gameObject);
+        }
         Gert = GameObject.Find("Gert").GetComponent<Transform>();
         Emily = GameObject.Find("Emily").GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
