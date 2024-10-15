@@ -2181,7 +2181,7 @@ PrefabInstance:
     - target: {fileID: 6585618237400665581, guid: 7d69859ede71e9943b35689101bdf751, type: 3}
       propertyPath: enemyPrefab
       value: 
-      objectReference: {fileID: 71492001262578616, guid: 36e055d558eee0a4fa23004afccccc27, type: 3}
+      objectReference: {fileID: 2029303866979011906, guid: 1badc4ae046edd14fb1a081d0a482cb6, type: 3}
     - target: {fileID: 7630765637662835286, guid: 7d69859ede71e9943b35689101bdf751, type: 3}
       propertyPath: m_Name
       value: SpawnManager
