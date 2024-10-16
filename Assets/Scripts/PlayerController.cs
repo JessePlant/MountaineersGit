@@ -60,39 +60,11 @@ public class PlayerController : MonoBehaviour
 
         // update climbing state same time
         activePlayer.SetClimbing(isClimbRequested);
-
-        ///===================
-        // Calculate the potential next position for the active player
-
-        Vector3 nextPosition = activePlayer.transform.position + new Vector3(playerMovement.x, 0, playerMovement.y);
-        print(activePlayer.transform.position + " Is active");
-        // Calculate the distance between Gert and Emily if activePlayer moves
-        float currentDistance = Vector3.Distance(Gert.transform.position, Emily.transform.position);
-        float newDistance = Vector3.Distance(nextPosition, inactivePlayer.transform.position);
-        print(activePlayer.transform.position + " Is active");
-
-
-        // Check if the new distance exceeds the maximum allowed distance
-        if (newDistance < maxDistanceBetweenPlayers || newDistance < currentDistance)
-        {
-            if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
-            {
-                activePlayer.MovePlayer(playerMovement, isJumpRequested, inactivePlayer.gameObject);
-            }
-        }
-        else
-        {
-            activePlayer.StopPlayer();
-            Debug.Log("Movement prevented: Distance between players would exceed the maximum allowed.");
-        }
-
-        // Update the position of the chained line between Gert and Emily
-        //chained.SetPosition(0, Gert.transform.position);
-        //chained.SetPosition(1, Emily.transform.position);
-        /////====
        
-        //chained.SetPosition(0, Gert.transform.position);
-        //chained.SetPosition(1, Emily.transform.position);
+        if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
+        {
+            activePlayer.MovePlayer(playerMovement, isJumpRequested, inactivePlayer.gameObject);
+        }
 
         //// Detect player switching
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -102,19 +74,6 @@ public class PlayerController : MonoBehaviour
             inactivePlayer.StopPlayer();
         }
 
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    if (Gert.CanRest && Emily.CanRest)
-        //    {
-        //        Gert.State = Player.PlayerState.RESTING;
-        //        Emily.State = Player.PlayerState.RESTING;
-        //    } else
-        //    {
-        //        Gert.State = Player.PlayerState.CLIMBING;
-        //        Emily.State = Player.PlayerState.CLIMBING;
-        //    }
-        //}
-       
         if(Gert.transform.position.y>10 || Emily.transform.position.y>10 || gOver==true)
         {
             gOver=true;
@@ -127,13 +86,6 @@ public class PlayerController : MonoBehaviour
             //cs.OpenPlayerDead();
             print("Dead");
         }
-    }
-    
-
-    void FixedUpdate()
-    {
-        // Move player based on the movement direction set in Update
-        //activePlayer.Move();
     }
 
 }

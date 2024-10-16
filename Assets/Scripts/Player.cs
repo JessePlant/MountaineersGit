@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -79,6 +78,9 @@ public class Player : MonoBehaviour
     private Animator EAnimator;
     Vector3 restingVelocity = new Vector3(0, -20, 0);
     MeshRenderer meshRenderer;
+
+    private GameObject otherPlayer;
+    private float oldDistance = float.PositiveInfinity;
     #endregion
 
     #endregion
@@ -134,6 +136,7 @@ public class Player : MonoBehaviour
     {
         playerRigidbody.isKinematic = false;
         movementInput = movement;
+        otherPlayer = playa;
 
         if (inputSpace)
         {
@@ -273,10 +276,22 @@ public class Player : MonoBehaviour
             physicalState.ConsumeStamina();
         }
 
-        
 
+
+       if (otherPlayer)
+        {
+            float newDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
+            if (newDistance > 3f)
+            {
+                playerRigidbody.position = lastPosition;
+            }
+            oldDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
+
+        }
         lastPosition = playerRigidbody.position;
         isClimbingRequested &= !physicalState.IsOutOfStamina;
+
+
     }
 
     void ClearState()
@@ -382,6 +397,7 @@ public class Player : MonoBehaviour
         {
             return false;
         }
+        
 
         groundContactCount = 1;
         contactNormal = hit.normal;
