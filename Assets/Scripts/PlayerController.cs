@@ -86,6 +86,16 @@ public class PlayerController : MonoBehaviour
             //cs.OpenPlayerDead();
             print("Dead");
         }
+        {
+            cs.OpenPlayerDead();
+        }
+    }
+    
+
+    void FixedUpdate()
+    {
+        // Move player based on the movement direction set in Update
+        //activePlayer.Move();
     }
 
 }

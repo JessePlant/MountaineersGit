@@ -45,7 +45,7 @@ public class AttackController : MonoBehaviour
     {
         if (cameraController.onGert)
         {
-            if (Input.GetMouseButtonDown(0) && !isReloading)
+            if (Input.GetMouseButtonDown(0) && !isReloading && !IngameMenuManager.inMenu)
             {
                 ShotsFired++;
                 print("Shooting" + ShotsFired);
