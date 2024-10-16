@@ -34,7 +34,11 @@ public class SherpaShopKeeper : MonoBehaviour
     }
 
     void Update()
-    {}
+    {
+        if(isInShop){
+            getkeys();
+        }
+    }
 
     void CheckPurchased(){
         if(SaveManager.Instance.assaultRifle){
@@ -89,8 +93,24 @@ public class SherpaShopKeeper : MonoBehaviour
     }
     public void equipSling()
     {
+        print(" Got sling");
         activeGun.currentGun = guninfo.guns[0];
         shopCanvas.gameObject.SetActive(false);
         isInShop = false;
-}
+    }
+    void getkeys() 
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            equipSling();
+        }
+        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            equipAR();
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            equipLSR();
+        }
+    }
 }
