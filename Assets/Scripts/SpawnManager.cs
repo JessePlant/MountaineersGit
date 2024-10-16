@@ -32,7 +32,7 @@ public class SpawnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      print("SpawnManager "+gertPos.position.y);
+      //print("SpawnManager "+gertPos.position.y);
       if(cam.target1.transform.position.y > 5 && ReadyToSpawn)
       {
         Vector3 spawnlocation = getPossibleSpawnLocationBelow(); 

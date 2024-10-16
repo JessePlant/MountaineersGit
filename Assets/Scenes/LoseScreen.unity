@@ -7829,10 +7829,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1766540415}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c55b3e70cc0cad4280475e34b69c0f8, type: 3}
+  m_Script: {fileID: 11500000, guid: 26e59e4325251264aa4064caa13fea8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restartButton: {fileID: 1013772760}
+  restartButton: {fileID: 1866100342483674485}
   textPrefab: {fileID: 0}
   numberOfColumns: 5
   rowsPerColumn: 10
@@ -9106,8 +9106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8e151277193b246b55b4cea98ec399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameCanvas: {fileID: 0}
-  gameOverText: {fileID: 0}
 --- !u!1 &2136500786
 GameObject:
   m_ObjectHideFlags: 0
@@ -9367,6 +9365,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fbf728f6a7dfe54fb2927872f478a30, type: 3}
+--- !u!1 &1866100342483674485 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6085831112474247691, guid: 7fbf728f6a7dfe54fb2927872f478a30, type: 3}
+  m_PrefabInstance: {fileID: 1866100342483674484}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
