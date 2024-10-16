@@ -37,15 +37,15 @@ public class SpawnManager : MonoBehaviour
         
         Vector3 spawnlocation = getPossibleSpawnLocationBelow();
         print("Spawning at" + spawnlocation);
-        Instantiate(enemyPrefab,spawnlocation,Quaternion.identity);
+        Instantiate(EnemyVariant1,spawnlocation,Quaternion.identity);
         StartCoroutine(SpawnMore());
       }
 
-      if(GameObject.Find("Enemy Variant 1(Clone)") == null){
+      if(GameObject.Find("Enemy Variant 1 1(Clone)") == null){
         return;
       }	  
       else{
-        EnemyVariant1 = GameObject.Find("Enemy Variant 1(Clone)");
+        EnemyVariant1 = GameObject.Find("Enemy Variant 1 1(Clone)");
         EnemyVariant1.GetComponentInChildren<Transform>().LookAt(cam.target1.transform.position);
       }
     }
