@@ -26,6 +26,7 @@ public class SpawnManager : MonoBehaviour
         respawnSpeed = 5f;
         gertPos = cam.target1.transform;
         EmilyPos = cam.target2.transform;
+        EnemyVariant1.transform.rotation = Quaternion.Euler(new Vector3(4.001f,-0.107f,-2.003f));
     }
 
     // Update is called once per frame
@@ -34,18 +35,22 @@ public class SpawnManager : MonoBehaviour
       print("SpawnManager "+gertPos.position.y);
       if(cam.target1.transform.position.y > 5 && ReadyToSpawn)
       {
-        
         Vector3 spawnlocation = getPossibleSpawnLocationBelow();
+        if(cam.Front){
+        }
+        else{
+            spawnlocation.x -= 1f;
+        } 
         print("Spawning at" + spawnlocation);
         Instantiate(EnemyVariant1,spawnlocation,Quaternion.identity);
         StartCoroutine(SpawnMore());
       }
 
-      if(GameObject.Find("Enemy Variant 1 1(Clone)") == null){
+      if(GameObject.Find("FinishedZombie") == null){
         return;
       }	  
       else{
-        EnemyVariant1 = GameObject.Find("Enemy Variant 1 1(Clone)");
+        EnemyVariant1 = GameObject.Find("FinishedZombie");
         EnemyVariant1.GetComponentInChildren<Transform>().LookAt(cam.target1.transform.position);
       }
     }

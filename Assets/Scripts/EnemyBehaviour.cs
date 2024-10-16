@@ -31,6 +31,9 @@ public class EnemyBehaviour : MonoBehaviour
     public float maxHealth = 30f;
     public float currentHealth = 30f;
     public bool canMove = true;
+
+    public GameObject animator;
+    Animator anim;
     void Awake(){
         if(transform.position.y < 0){
             Destroy(gameObject);
@@ -41,8 +44,8 @@ public class EnemyBehaviour : MonoBehaviour
         GertState = GameObject.Find("Gert").GetComponent<PhysicalState>();
         EmilyState = GameObject.Find("Emily").GetComponent<PhysicalState>();
         attackController = GameObject.Find("AttackController").GetComponent<AttackController>();
-        agent.autoTraverseOffMeshLink = true;
-        attackRange = 1.5f;
+        anim = animator.GetComponent<Animator>();
+        attackRange = 0.8f;
         alreadyAttacked = false;
         RandomTarget = Random.Range(0, 2);
         if(RandomTarget == 0){
@@ -55,6 +58,8 @@ public class EnemyBehaviour : MonoBehaviour
         }
         healthBar.maxValue = maxHealth;
         healthBar.value = currentHealth;
+        agent.updateRotation = false;
+        transform.rotation = Quaternion.Euler(new Vector3(4.001f,-0.107f,-2.003f));
     }
 
    
@@ -72,20 +77,23 @@ public class EnemyBehaviour : MonoBehaviour
     }
     public void Chase()
     {
+        anim.speed = 1;
         agent.SetDestination(target.position);
     }
 
     public void Attack()
     {
+        
         Debug.Log("Going to Attack");
         agent.SetDestination(transform.position);
         Debug.Log("Already Attacked "+alreadyAttacked);       
         if(!alreadyAttacked){
             Debug.Log("Attack Commencing");
             alreadyAttacked = true;
+            anim.speed = 0.5f;
             // healthManager.Playerdmg();
             if(RandomTarget == 0 )
-            {
+            {   
                 GertState.Damage(10);
             }
             else
@@ -98,6 +106,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     IEnumerator ResetAttack()
     {
+        anim.speed = 0f;
         Debug.Log("Coroutine started, waiting for: " + timeBetweenAttacks + " seconds");
         yield return new WaitForSecondsRealtime(3f);
         Debug.Log("Starting Coroutine");
