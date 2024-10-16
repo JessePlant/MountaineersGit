@@ -228,6 +228,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        playerRigidbody.isKinematic = false;
         Vector3 gravity = CustomGravity.GetGravity(playerRigidbody.position, out upAxis);
         lastVelocity = playerRigidbody.velocity; // Track the velocity in every frame
 

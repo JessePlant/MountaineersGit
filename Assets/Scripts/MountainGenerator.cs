@@ -8,7 +8,7 @@ public class MountainGenerator : MonoBehaviour
     [SerializeField] private GameObject climbablePrefab; // Prefab for climbable cubes
     [SerializeField] private GameObject unclimbablePrefab; // Prefab for unclimbable cubes
     [SerializeField] private GameObject restPrefab; // Prefab for rest platform cubes
-    [SerializeField] private int mountainHeight = 10; // Number of cubes along height
+    public int mountainHeight = 10; // Number of cubes along height
     [SerializeField] private int mountainWidth = 10; // Number of cubes along width
     [SerializeField] private int mountainDepth = 10; // Number of cubes along depth
     [SerializeField] private float cubeSize = 1f; // Size of each cube

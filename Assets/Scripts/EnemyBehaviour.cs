@@ -27,15 +27,15 @@ public class EnemyBehaviour : MonoBehaviour
 
     [Header("Health Stuff")]
     public Slider healthBar;
-    public Vector3 healthBarOffset= new Vector3(0,1,0);
+    public Vector3 healthBarOffset = new Vector3(0, 1, 0);
     public float maxHealth = 30f;
     public float currentHealth = 30f;
     public bool canMove = true;
 
     public GameObject animator;
     Animator anim;
-    void Awake(){
-        if(transform.position.y < 0){
+    void Awake() {
+        if (transform.position.y < 0) {
             Destroy(gameObject);
         }
         Gert = GameObject.Find("Gert").GetComponent<Transform>();
@@ -48,31 +48,52 @@ public class EnemyBehaviour : MonoBehaviour
         attackRange = 0.8f;
         alreadyAttacked = false;
         RandomTarget = Random.Range(0, 2);
-        if(RandomTarget == 0){
+        if (RandomTarget == 0) {
             target = Gert;
             Debug.Log("Current Target is Gert");
         }
-        else{
+        else {
             target = Emily;
-             Debug.Log("Current Target is Emily");
+            Debug.Log("Current Target is Emily");
         }
         healthBar.maxValue = maxHealth;
         healthBar.value = currentHealth;
         agent.updateRotation = false;
-        transform.rotation = Quaternion.Euler(new Vector3(4.001f,-0.107f,-2.003f));
+        transform.rotation = Quaternion.Euler(new Vector3(4.001f, -0.107f, -2.003f));
     }
 
-   
+
     // Update is called once per frame
     void Update()
     {
-        if(!SherpaShopKeeper.isInShop && canMove)
+        if (!SherpaShopKeeper.isInShop && canMove)
         {
-        healthBar.transform.position = transform.position + healthBarOffset;
-        healthBar.transform.LookAt(Camera.main.transform); 
-        inAttackRange = Physics.CheckSphere(transform.position, attackRange, playerLayer);
-        if(!inAttackRange) Chase();
-        else Attack();
+            healthBar.transform.position = transform.position + healthBarOffset;
+            healthBar.transform.LookAt(Camera.main.transform);
+            inAttackRange = false;
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange, playerLayer);
+            if (hitColliders.Length > 0)
+            {
+                int playersInRange = 0;
+                foreach (Collider hitCollider in hitColliders)
+                {
+                    if (hitCollider.CompareTag("Player"))
+                    {
+                        playersInRange++;
+                    }
+                    if (hitCollider.name == target.GetComponent<Collider>().name)
+                    {
+                        inAttackRange = true;
+                    }
+                }
+                if (!inAttackRange && playersInRange > 0)
+                {
+                    target = (target == Gert) ? Emily : Gert;
+                }
+            }
+
+            if (!inAttackRange) Chase();
+            else Attack();
         }
     }
     public void Chase()
@@ -81,26 +102,48 @@ public class EnemyBehaviour : MonoBehaviour
         agent.SetDestination(target.position);
     }
 
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        print("Current Health" + currentHealth);
+        print(currentHealth);
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+            SaveManager.Instance.money += 5;
+            SaveManager.Instance.Save();
+        }
+        else
+        {
+            healthBar.value = currentHealth;
+            StartCoroutine(shellShock());
+        }
+    }
+
     public void Attack()
     {
-        
+
         Debug.Log("Going to Attack");
         agent.SetDestination(transform.position);
-        Debug.Log("Already Attacked "+alreadyAttacked);       
-        if(!alreadyAttacked){
+        Debug.Log("Already Attacked " + alreadyAttacked);
+        if (!alreadyAttacked)
+        {
             Debug.Log("Attack Commencing");
             alreadyAttacked = true;
             anim.speed = 0.5f;
             // healthManager.Playerdmg();
-            if(RandomTarget == 0 )
-            {   
-                GertState.Damage(10);
-            }
-            else
+            if (target == Gert)
             {
-                EmilyState.Damage(10);
+                if (RandomTarget == 0)
+                {
+                    GertState.Damage(10);
+                }
+                else
+                {
+                    EmilyState.Damage(10);
+                }
+                StartCoroutine(ResetAttack());
             }
-            StartCoroutine(ResetAttack());
         }
     }
 
@@ -112,30 +155,18 @@ public class EnemyBehaviour : MonoBehaviour
         Debug.Log("Starting Coroutine");
         alreadyAttacked = false;
     }
-    
-    public void TakeDamage(float damage){
-        currentHealth -= damage;
-        print("Current Health"+currentHealth);
-        print(currentHealth);
-        if(currentHealth <= 0){
-            Destroy(gameObject);
-            SaveManager.Instance.money += 5;
-            SaveManager.Instance.Save();
-        }
-        else{
-            healthBar.value = currentHealth;
-            StartCoroutine(shellShock());
-        }
-    }
+
+        
     IEnumerator shellShock()
     {
         canMove = false;
-        if(attackController.currentGun.name == "Lazer Rifle"){
+        if (attackController.currentGun.name == "Lazer Rifle") {
             yield return new WaitForSecondsRealtime(1);
         }
-        else{
+        else {
             yield return new WaitForSecondsRealtime(0.5f);
         }
         canMove = true;
     }
+    
 }

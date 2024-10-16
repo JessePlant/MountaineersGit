@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float maxDistanceBetweenPlayers = 2.5f; // Maximum distance allowed between Emily and Gert
     private float oldDistance = float.PositiveInfinity;
-
+    public MountainGenerator mountainGenerator;
+    public float mountainHeight = 10f;
 
     private Vector2 playerMovement;
     private bool isJumpRequested;
@@ -41,7 +42,10 @@ public class PlayerController : MonoBehaviour
         activePlayer = Gert;
         inactivePlayer = Emily;
         gOver = false;
-
+        if (mountainGenerator)
+        {
+            mountainHeight = mountainGenerator.mountainHeight;
+        }
     }
 
     // Update is called once per frame
@@ -74,12 +78,12 @@ public class PlayerController : MonoBehaviour
             inactivePlayer.StopPlayer();
         }
 
-        if(Gert.transform.position.y>10 || Emily.transform.position.y>10 || gOver==true)
+        if(Gert.transform.position.y> mountainHeight || Emily.transform.position.y> mountainHeight|| gOver==true)
         {
             gOver=true;
             Debug.Log(gOver);
-            gameOverCanvas.SetActive(true);
-            cs.OpenGameWinCanvas();
+            //gameOverCanvas.SetActive(true);
+            //cs.OpenGameWinCanvas();
         }
         if(Gert.State == Player.PlayerState.DEAD || Emily.State == Player.PlayerState.DEAD)
         {
