@@ -12,9 +12,9 @@ public class IngameMenuManager : MonoBehaviour
     public GameObject HelpButton;
     public Slider volumeSlider;
     public AudioMixer audioMixer;
-    public Image damageOverlay;  // Assign your UI Image (DamageOverlay) here
-    private Color overlayColor;
-    public float fadeSpeed = 2f;  // Speed at which the flash fades out
+    public Image damageOverlay;  // Assign your UI Image (DamageoverlayChange) here
+    private Color overlayColour;
+    public float fadeSpeed = 0.3f;  // Speed at which the flash fades out
     public float flashDuration = 0.3f;  // Duration of the flash
 
     public Image winFlash; 
@@ -27,10 +27,10 @@ public class IngameMenuManager : MonoBehaviour
         mainMenu.SetActive(false);  // Hide main menu
         HelpButton.SetActive(false);  // Hide any additional buttons if needed
         canvas.enabled = false;  // Ensure the Canvas is initially hidden
-        overlayColor = damageOverlay.color;
-        overlayColor.a = 0;  // Fully transparent at start
-        damageOverlay.color = overlayColor;
-        winFlash.enabled = false;
+        overlayColour = damageOverlay.color;
+        overlayColour.a = 0;  // Fully transparent at start
+        damageOverlay.color = overlayColour;
+        //winFlash.enabled = false;
     }
 
     // Update is called once per frame
@@ -97,27 +97,27 @@ public class IngameMenuManager : MonoBehaviour
     public void PlayerHitFeedback()
     {
         // Set the alpha to 0.8 (strong visibility) when hit
-        overlayColor.a = 0.8f;
-        damageOverlay.color = overlayColor;
+        overlayColour.a = 0.8f;
+        damageOverlay.color = overlayColour;
         // Start the fade-out coroutine
-        StartCoroutine(FadeDamageOverlay(overlayColor));
+        StartCoroutine(FadeDamageOverlay());
     }
 
-    IEnumerator FadeDamageOverlay(Color overlay)
+    IEnumerator FadeDamageOverlay()
     {
         // Gradually fade out the overlay by decreasing the alpha
-        while (overlay.a > 0)
+        while (overlayColour.a > 0)
         {
-            overlayColor.a -= Time.deltaTime * fadeSpeed;  // Fade out based on fade speed
-            damageOverlay.color = overlay;  // Apply the color to the image
-            yield return null;  // Wait for the next frame
+            overlayColour.a -= Time.deltaTime * fadeSpeed;  
+            damageOverlay.color = overlayColour;  
+            yield return null;  
         }
     }
 
     public void WinFlash()
     {
         winFlash.enabled = true;
-        // change Scene
+       
     }
 
 }
