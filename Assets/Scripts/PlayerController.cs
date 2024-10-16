@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+
 //using System.Numerics;
 using UnityEngine;
 
@@ -31,10 +33,9 @@ public class PlayerController : MonoBehaviour
     void Start() 
     {
 
-        cs = GetComponent<ChangeScene>();
+        cs = GameObject.Find("SceneController").GetComponent<ChangeScene>();
         
-        gameOverCanvas = GameObject.Find("GameOverScreen");
-        gameOverCanvas.SetActive(false);
+        
         gert = GameObject.Find("Gert");
         Gert = gert.GetComponent<Player>();
         emily = GameObject.Find("Emily");
@@ -65,7 +66,7 @@ public class PlayerController : MonoBehaviour
         // update climbing state same time
         activePlayer.SetClimbing(isClimbRequested);
        
-        if (!(Gert.State == Player.PlayerState.DEAD || Gert.State == Player.PlayerState.DEAD))
+        if (!(Gert.State == Player.PlayerState.DEAD || Emily.State == Player.PlayerState.DEAD))
         {
             activePlayer.MovePlayer(playerMovement, isJumpRequested, inactivePlayer.gameObject);
         }
@@ -80,15 +81,13 @@ public class PlayerController : MonoBehaviour
 
         if(Gert.transform.position.y> mountainHeight || Emily.transform.position.y> mountainHeight|| gOver==true)
         {
-            gOver=true;
-            Debug.Log(gOver);
-            //gameOverCanvas.SetActive(true);
-            //cs.OpenGameWinCanvas();
+            Debug.Log("Win Condition met");
+           cs.goToWinScene();
         }
-        if(Gert.State == Player.PlayerState.DEAD || Emily.State == Player.PlayerState.DEAD)
+        if (Gert.State == Player.PlayerState.DEAD || Emily.State == Player.PlayerState.DEAD || (Emily.State == Player.PlayerState.FALLING || Emily.State == Player.PlayerState.FALLING) && Mathf.Max(gert.transform.position.y, emily.transform.position.y)>5)
         {
-            //cs.OpenPlayerDead();
-            print("Dead");
+            Debug.Log("Lose met");
+            cs.goToLoseScene();
         }
     }
     

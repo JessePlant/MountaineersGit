@@ -68,14 +68,14 @@ public class ChainLineRenderer : MonoBehaviour
                 lineRenderer.SetPosition(0, Emily.position);
                 lineRenderer.SetPosition(1, corners[closest]);
                 lineRenderer.SetPosition(2, Gert.position);
-                print("=========== Curved ================");
+              
             }
             else
             {               
                 lineRenderer.positionCount = 2;
                 lineRenderer.SetPosition(0, Emily.position);
                 lineRenderer.SetPosition(1, Gert.position);
-                print("=========== Not Curved ================");
+                
 
             }
 

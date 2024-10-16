@@ -18,6 +18,7 @@ public class CameraController : MonoBehaviour
     public Vector3 mountMid, targ1Pos, targ2Pos;
     public bool Front = true, emilyUpdated = false;
     RaycastHit Hit; 
+    
     void Start()
     {
         onGert = false;

@@ -151,8 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8e151277193b246b55b4cea98ec399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameCanvas: {fileID: 0}
-  gameOverText: {fileID: 0}
 --- !u!4 &86451420
 Transform:
   m_ObjectHideFlags: 0
@@ -789,7 +787,7 @@ MonoBehaviour:
   - But after losing the last shred of hope left
   - Gert and Emily must now first begin to vanquish those from within
   typingSpeed: 0.05
-  titleSCreenButton: {fileID: 0}
+  titleSCreenButton: {fileID: 357218870}
 --- !u!4 &1066121543
 Transform:
   m_ObjectHideFlags: 0
