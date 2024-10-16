@@ -43,10 +43,12 @@ public class PlayerController : MonoBehaviour
         activePlayer = Gert;
         inactivePlayer = Emily;
         gOver = false;
-        if (mountainGenerator)
+        
+        /*if (mountainGenerator)
         {
             mountainHeight = mountainGenerator.mountainHeight;
         }
+        */
     }
 
     // Update is called once per frame
@@ -79,7 +81,7 @@ public class PlayerController : MonoBehaviour
             inactivePlayer.StopPlayer();
         }
 
-        if(Gert.transform.position.y> mountainHeight || Emily.transform.position.y> mountainHeight)
+        if(Gert.transform.position.y> 100 || Emily.transform.position.y> 100)
         {
             Debug.Log("Win Condition met");
            cs.goToWinScene();
