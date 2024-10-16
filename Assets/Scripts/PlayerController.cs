@@ -105,17 +105,7 @@ public class PlayerController : MonoBehaviour
         //    }
         //}
        
-        if(Gert.transform.position.y>200 || Emily.transform.position.y>200 || gOver==true)
-        {
-            gOver=true;
-            Debug.Log(gOver);
-            gameOverCanvas.SetActive(true);
-            cs.OpenGameWinCanvas();
-        }
-        if(Gert.State == Player.PlayerState.DEAD || Emily.State == Player.PlayerState.DEAD)
-        {
-            cs.OpenPlayerDead();
-        }
+
     }
     
 
