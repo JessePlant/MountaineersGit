@@ -9,9 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Title.unity
     guid: 3d2ff0855dc9eef46b2da3efe2e7f555
   - enabled: 1
+    path: Assets/Scenes/FinalMovement.unity
+    guid: 737d7e9ff8244144dbd2ea24b64ac180
+  - enabled: 1
     path: Assets/Scenes/OpeningCutscene.unity
     guid: 5d5dc784a0ed02e4d9cd4d790cdf2cd1
   - enabled: 1
-    path: Assets/Scenes/FinalMovement.unity
-    guid: 737d7e9ff8244144dbd2ea24b64ac180
+    path: Assets/Scenes/LoseScreen.unity
+    guid: 4529eccb2c109e548b0a82b1c2878dc1
+  - enabled: 1
+    path: Assets/Scenes/Win Scene.unity
+    guid: 1dafad1395ccca84ca8157d45fd88515
   m_configObjects: {}

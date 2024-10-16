@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxDistanceBetweenPlayers = 2.5f; 
     private float oldDistance = float.PositiveInfinity;
     public MountainGenerator mountainGenerator;
-    public float mountainHeight = 10f;
+    public float mountainHeight = 100f;
 
     private Vector2 playerMovement;
     private bool isJumpRequested;
@@ -43,10 +43,12 @@ public class PlayerController : MonoBehaviour
         activePlayer = Gert;
         inactivePlayer = Emily;
         gOver = false;
-        if (mountainGenerator)
+        
+        /*if (mountainGenerator)
         {
             mountainHeight = mountainGenerator.mountainHeight;
         }
+        */
     }
 
     // Update is called once per frame
@@ -75,7 +77,7 @@ public class PlayerController : MonoBehaviour
             inactivePlayer.StopPlayer();
         }
 
-        if(Gert.transform.position.y> mountainHeight || Emily.transform.position.y> mountainHeight|| gOver==true)
+        if(Gert.transform.position.y> 100 || Emily.transform.position.y> 100)
         {
             Debug.Log("Win Condition met");
            cs.goToWinScene();
