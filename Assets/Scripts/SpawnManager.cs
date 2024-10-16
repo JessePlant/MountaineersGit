@@ -35,12 +35,7 @@ public class SpawnManager : MonoBehaviour
       print("SpawnManager "+gertPos.position.y);
       if(cam.target1.transform.position.y > 5 && ReadyToSpawn)
       {
-        Vector3 spawnlocation = getPossibleSpawnLocationBelow();
-        if(cam.Front){
-        }
-        else{
-            spawnlocation.x -= 1f;
-        } 
+        Vector3 spawnlocation = getPossibleSpawnLocationBelow(); 
         print("Spawning at" + spawnlocation);
         Instantiate(EnemyVariant1,spawnlocation,Quaternion.identity);
         StartCoroutine(SpawnMore());
