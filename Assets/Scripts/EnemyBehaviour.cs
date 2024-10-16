@@ -45,7 +45,8 @@ public class EnemyBehaviour : MonoBehaviour
         EmilyState = GameObject.Find("Emily").GetComponent<PhysicalState>();
         attackController = GameObject.Find("AttackController").GetComponent<AttackController>();
         anim = animator.GetComponent<Animator>();
-        attackRange = 0.8f;
+        ingameMenuManager = GameObject.Find("inGameGUI").GetComponent<IngameMenuManager>();
+        attackRange = 1.5f;
         alreadyAttacked = false;
         RandomTarget = Random.Range(0, 2);
         if (RandomTarget == 0) {

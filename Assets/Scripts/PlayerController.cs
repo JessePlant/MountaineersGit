@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
         playerMovement = new Vector2(moveHorizontal, moveVertical);
         playerMovement = Vector2.ClampMagnitude(playerMovement, 1f);
 
-        isJumpRequested = Input.GetButtonDown("Jump");
+        isJumpRequested = false;// Input.GetButtonDown("Jump");
         isClimbRequested = Input.GetButtonDown("Climb") ? !isClimbRequested : isClimbRequested;
 
         // update climbing state same time

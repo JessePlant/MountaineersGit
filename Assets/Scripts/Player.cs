@@ -279,16 +279,16 @@ public class Player : MonoBehaviour
 
 
 
-       if (otherPlayer)
-        {
-            float newDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
-            if (newDistance > 5f)
-            {
-                playerRigidbody.position = lastPosition;
-            }
-            oldDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
+       //if (otherPlayer)
+       // {
+       //     float newDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
+       //     if (newDistance > 5f)
+       //     {
+       //         playerRigidbody.position = lastPosition;
+       //     }
+       //     oldDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
 
-        }
+       // }
         lastPosition = playerRigidbody.position;
         isClimbingRequested &= !physicalState.IsOutOfStamina;
 
@@ -520,13 +520,13 @@ public class Player : MonoBehaviour
         if (collision.collider.CompareTag("Ground") &&  lastVelocity.y < 0f)
         {
             float impactForce = lastVelocity.magnitude;
-            float damageThreshold = 8f;
+            float damageThreshold = 5f;
             if (impactForce > damageThreshold)
             {
-                float damage = (impactForce - damageThreshold) * 5f; // Adjust the multiplier as needed
+                float damage = (impactForce - damageThreshold) * 50f; // Adjust the multiplier as needed
 
                 // Apply damage to the player
-                physicalState.Damage(damage);
+                physicalState.Damage(Mathf.Abs(damage));
             }
             playerState = PlayerState.CLIMBING;
         }
