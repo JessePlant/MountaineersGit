@@ -1,5 +1,11 @@
 # Mountaineers
 
+## How to run 
+
+```bash
+git clone git@github.com:JessePlant/MountaineersGit.git
+
+```
 ## Implementation
 * For the menu icons we used art from OpenGameArt
 * For the player movement we expanded on the code by [Jasper Flick](https://catlikecoding.com/jasper-flick/).
