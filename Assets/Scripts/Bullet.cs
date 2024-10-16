@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour
     public CameraController cameraController;
     public AttackController attackController;
     public Transform gert;
-    //public float speed = 3.5f;
+    //public float attackController.currentGun.speed = 3.5f;
     public bool isMoving = false;
     Vector3 mousePos;
     Vector3 dir;
@@ -19,6 +19,8 @@ public class Bullet : MonoBehaviour
     public bool didHit; 
     EnemyBehaviour e;
     public GameObject relativeToPlayer;
+    Vector3 faceNormal;
+    Vector2 direction2D;
     
     // Start is called before the first frame update
     void Start()
@@ -41,15 +43,24 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
         transform.Translate(dir*attackController.currentGun.speed*Time.deltaTime);
+        
     }
 
     public Vector2 calcDirection(CameraController camera)
     {
-        
-        Vector3 direction = new Vector3(attackController.worldPos.x - camera.target1.transform.position.x, attackController.worldPos.y - camera.target1.transform.position.y,camera.target1.transform.position.z);
+        Vector2 direction;
+        if(!cameraController.Front){
+            print("using Other");
+            direction = new Vector2(attackController.worldPos.z - camera.target1.transform.position.z, attackController.worldPos.y - camera.target1.transform.position.y);
+        }
+        else{
+            print("using Normal");
+        direction = new Vector2(attackController.worldPos.x - camera.target1.transform.position.x, attackController.worldPos.y - camera.target1.transform.position.y);
+        }
         isMoving = true;
         return direction.normalized;
     }
+
 
 
     bool hitEnemy(Transform player)

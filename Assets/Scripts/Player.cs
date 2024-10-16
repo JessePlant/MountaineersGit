@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -24,7 +23,7 @@ public class Player : MonoBehaviour
     [SerializeField] Transform inputSpace = default; 
 
     [Header("Movement Settings")]
-    [SerializeField, Range(0f, 100f)] float maxGroundSpeed = 10f, maxClimbSpeed = 4f; 
+    [SerializeField, Range(0f, 100f)] public float maxGroundSpeed = 10f, maxClimbSpeed = 2f; 
     [SerializeField, Range(0f, 100f)] float groundAcceleration = 10f, maxAirAcceleration = 1f, maxClimbAcceleration = 40f;
 
     [Header("Jump Settings")]
@@ -45,6 +44,7 @@ public class Player : MonoBehaviour
     [Header("Materials")]
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material climbingMaterial = default;
+
 
     // New variable to track velocity before hitting the ground
     private Vector3 lastVelocity, lastPosition;
@@ -78,6 +78,9 @@ public class Player : MonoBehaviour
     private Animator EAnimator;
     Vector3 restingVelocity = new Vector3(0, -20, 0);
     MeshRenderer meshRenderer;
+
+    private GameObject otherPlayer;
+    private float oldDistance = float.PositiveInfinity;
     #endregion
 
     #endregion
@@ -131,7 +134,9 @@ public class Player : MonoBehaviour
 
     public void MovePlayer(Vector2 movement, bool jump, GameObject playa)
     {
+        playerRigidbody.isKinematic = false;
         movementInput = movement;
+        otherPlayer = playa;
 
         if (inputSpace)
         {
@@ -155,6 +160,11 @@ public class Player : MonoBehaviour
         isJumpRequested |= jump;
         isClimbingRequested = Input.GetButtonDown("Climb") ? !isClimbingRequested : isClimbingRequested;
 
+    }
+
+    public void StopPlayer()
+    {
+        playerRigidbody.isKinematic = true;
     }
 
     void Update()
@@ -207,7 +217,7 @@ public class Player : MonoBehaviour
     float checkMovement(GameObject character)
     {
         Rigidbody characterRigidbody = character.GetComponent<Rigidbody>();
-        if (characterRigidbody.velocity.magnitude == 0)
+        if (characterRigidbody.velocity.magnitude < 1)
         {
             return 0;
         }
@@ -266,10 +276,22 @@ public class Player : MonoBehaviour
             physicalState.ConsumeStamina();
         }
 
-        
 
+
+       if (otherPlayer)
+        {
+            float newDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
+            if (newDistance > 3f)
+            {
+                playerRigidbody.position = lastPosition;
+            }
+            oldDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
+
+        }
         lastPosition = playerRigidbody.position;
         isClimbingRequested &= !physicalState.IsOutOfStamina;
+
+
     }
 
     void ClearState()
@@ -375,6 +397,7 @@ public class Player : MonoBehaviour
         {
             return false;
         }
+        
 
         groundContactCount = 1;
         contactNormal = hit.normal;
@@ -479,6 +502,19 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.CompareTag("Player"))
+        {
+            Rigidbody otherRigidbody = collision.collider.GetComponent<Rigidbody>();
+
+            // Make both rigidbodies kinematic to prevent pushing
+            if (otherRigidbody != null)
+            {
+                otherRigidbody.isKinematic = true;
+                playerRigidbody.isKinematic = true;
+                return;
+            }
+        }
+
         EvaluateCollision(collision);
         if (collision.collider.CompareTag("Ground") &&  lastVelocity.y < 0f)
         {
@@ -499,6 +535,21 @@ public class Player : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         EvaluateCollision(collision);
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            Rigidbody otherRigidbody = collision.collider.GetComponent<Rigidbody>();
+
+            // Re-enable physics interaction
+            if (otherRigidbody != null)
+            {
+                otherRigidbody.isKinematic = false;
+                playerRigidbody.isKinematic = false;
+            }
+        }
     }
 
     void EvaluateCollision(Collision collision)

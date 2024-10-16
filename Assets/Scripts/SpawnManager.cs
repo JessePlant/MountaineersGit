@@ -9,11 +9,13 @@ public class SpawnManager : MonoBehaviour
     public float lastPos;
     float incrSpawnHeight = 30;
     public CameraController cam;
-    public GameObject enemyPrefab;
+    public GameObject enemyPrefab, EnemyVariant1;
     public float respawnSpeed;
-    Vector3 gertPos;
-    Vector3 EmilyPos;
+    Transform gertPos;
+    Transform EmilyPos;
     public bool ReadyToSpawn = true;
+
+    public List<float> respawnspeeds;
 
     
 
@@ -22,22 +24,30 @@ public class SpawnManager : MonoBehaviour
     {
         cam = GameObject.Find("Main Camera").GetComponent<CameraController>();
         respawnSpeed = 5f;
-        gertPos = cam.target1.transform.position;
-        EmilyPos = cam.target2.transform.position;
+        gertPos = cam.target1.transform;
+        EmilyPos = cam.target2.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-      print("SpawnManager "+gertPos.y);
+      print("SpawnManager "+gertPos.position.y);
       if(cam.target1.transform.position.y > 5 && ReadyToSpawn)
       {
-        print("Spawning");
+        
         Vector3 spawnlocation = getPossibleSpawnLocationBelow();
-
-        Instantiate(enemyPrefab,spawnlocation,Quaternion.identity);
+        print("Spawning at" + spawnlocation);
+        Instantiate(EnemyVariant1,spawnlocation,Quaternion.identity);
         StartCoroutine(SpawnMore());
-      }  
+      }
+
+      if(GameObject.Find("Enemy Variant 1 1(Clone)") == null){
+        return;
+      }	  
+      else{
+        EnemyVariant1 = GameObject.Find("Enemy Variant 1 1(Clone)");
+        EnemyVariant1.GetComponentInChildren<Transform>().LookAt(cam.target1.transform.position);
+      }
     }
     IEnumerator Normalspawn()
     {
@@ -56,35 +66,28 @@ public class SpawnManager : MonoBehaviour
         print("UpOrDown: "+UpOrDown);
         int GorE = Random.Range(0, 2);
         print("GorE: "+GorE);	
-        Vector3 spawnLocation;
         if(UpOrDown == 0)
         {
             if(GorE == 0)
             {
-                gertPos.y -= 4f;
-                spawnLocation = gertPos;
-                return spawnLocation;
+               return new Vector3(gertPos.position.x, gertPos.position.y - 4f, gertPos.position.z);
             }
             else
             {
-                EmilyPos.y -= 4f;
-                spawnLocation = EmilyPos;
-                return spawnLocation;
+
+                return new Vector3(EmilyPos.position.x, EmilyPos.position.y - 4f, EmilyPos.position.z);
             }
         }
         else
         {
             if(GorE == 0)
             {
-                gertPos.y += 5;
-                spawnLocation = gertPos;
-                return spawnLocation;
+
+                return new Vector3(gertPos.position.x, gertPos.position.y + 4f, gertPos.position.z);
             }
             else
             {
-                EmilyPos.y += 5;
-                spawnLocation = EmilyPos;
-                return spawnLocation;
+                return new Vector3(EmilyPos.position.x, EmilyPos.position.y + 4f, EmilyPos.position.z);
             }
         }
     }
@@ -92,7 +95,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnMore()
     {
         ReadyToSpawn = false;
-        lastPos = gertPos.y;
+        lastPos = gertPos.position.y;
         yield return new WaitForSecondsRealtime(respawnSpeed);
         ReadyToSpawn = true;
         increaseRespawnSpeed();
