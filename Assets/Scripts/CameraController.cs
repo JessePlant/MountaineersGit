@@ -16,11 +16,11 @@ public class CameraController : MonoBehaviour
     public GameObject target1, target2;
 
     public Vector3 mountMid, targ1Pos, targ2Pos;
-    public bool Front = true;
+    public bool Front = true, emilyUpdated = false;
     RaycastHit Hit; 
     void Start()
     {
-        onGert = true;
+        onGert = false;
         target1 = GameObject.Find("Gert");
         target2 = GameObject.Find("Emily");
         //Set default angle to Gert.
@@ -33,11 +33,13 @@ public class CameraController : MonoBehaviour
         Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this with the current wall surface normal force direction times5. ie opposite direction player facing.
         //screenTopY = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
 
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         if(Input.GetKeyDown(KeyCode.Tab))
         {
             onGert = !onGert;
@@ -85,11 +87,18 @@ public class CameraController : MonoBehaviour
         }
         //if(target1.transform.position.y >= screenTopY || target2.transform.position.y >= screenTopY)
         //{
-            // ScrollCameraUp();
-            //screenTopY = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
+        // ScrollCameraUp();
+        //screenTopY = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
         //}
 
+        if (!emilyUpdated)
+        {
+            onGert = true;
+            emilyUpdated = true;
+        }
+
     }
+
     void ScrollCameraUp()
     {
         // Move the camera upwards smoothly
