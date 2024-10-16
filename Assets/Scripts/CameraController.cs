@@ -24,17 +24,11 @@ public class CameraController : MonoBehaviour
         onGert = false;
         target1 = GameObject.Find("Gert");
         target2 = GameObject.Find("Emily");
-        //Set default angle to Gert.
         Camera.main.orthographicSize = cameraSize;
         EmilySprite = GameObject.Find("EmilySprite");
-        GertSprite = GameObject.Find("GertSprite");
-        //Here some logicc to find centre of mountain. 
-        
+        GertSprite = GameObject.Find("GertSprite");        
         mountMid = new Vector3 (0, 0.5f, 0);
-        Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this with the current wall surface normal force direction times5. ie opposite direction player facing.
-        //screenTopY = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
-
-
+        Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17);
     }
 
     // Update is called once per frame
@@ -44,8 +38,6 @@ public class CameraController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Tab))
         {
             onGert = !onGert;
-            
-            //Also want to make the camera slowly move over to selected char, so the tab function should also be on a timer
         }
         EmilySprite.transform.LookAt(target2.transform.position);
         GertSprite.transform.LookAt(target1.transform.position);
@@ -59,7 +51,7 @@ public class CameraController : MonoBehaviour
             if (Physics.Raycast(target1.transform.position, Dir, out Hit ))
             {
                 GertSprite.transform.position = targ1Pos + Hit.normal.normalized*0.1f;
-                Camera.main.transform.position = targ1Pos + Hit.normal.normalized*13; //Hit.normal is direction we need camera to move from player.
+                Camera.main.transform.position = targ1Pos + Hit.normal.normalized*13; 
                 target1.transform.forward = -Hit.normal;
             }
             Camera.main.transform.LookAt(targ1Pos);
@@ -70,7 +62,6 @@ public class CameraController : MonoBehaviour
             else{
                 Front = true;
             }
-            //Camera.main.transform.position = target1.transform.position + new Vector3(0,0,-17); //NEEDTO redo this as above.
         }
         else
         {
@@ -84,13 +75,7 @@ public class CameraController : MonoBehaviour
                 target2.transform.forward = -Hit.normal;
             }
             Camera.main.transform.LookAt(targ2Pos);
-            //Camera.main.transform.position = target2.transform.position + new Vector3(0,0,-17);
         }
-        //if(target1.transform.position.y >= screenTopY || target2.transform.position.y >= screenTopY)
-        //{
-        // ScrollCameraUp();
-        //screenTopY = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
-        //}
 
         if (!emilyUpdated)
         {
@@ -102,7 +87,6 @@ public class CameraController : MonoBehaviour
 
     void ScrollCameraUp()
     {
-        // Move the camera upwards smoothly
         Vector3 newCameraPosition = Camera.main.transform.position + new Vector3(0, scrollThreshold, 0);
         Camera.main.transform.position = Vector3.Lerp(transform.position, newCameraPosition, Time.deltaTime * scrollSpeed);
     }

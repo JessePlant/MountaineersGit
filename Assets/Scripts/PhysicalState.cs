@@ -23,7 +23,7 @@ public class PhysicalState : MonoBehaviour
     [SerializeField] private float movementStaminaCost = 10f;
 
     [Header("Health Values")]
-    [SerializeField] public float currentHealth = 100f;
+    [SerializeField] public float currentHealth = 50f;
     [SerializeField] private float healthRegenerationRate = 10f;
     [SerializeField] private float maximumHealth = 100f;
     [SerializeField] private float healthDamage = 10f;

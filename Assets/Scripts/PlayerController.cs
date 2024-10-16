@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public ChangeScene cs;
     public GameObject gameOverCanvas, gert, emily;
     [Header("Movement")]
-    [SerializeField] private float maxDistanceBetweenPlayers = 2.5f; // Maximum distance allowed between Emily and Gert
+    [SerializeField] private float maxDistanceBetweenPlayers = 2.5f; 
     private float oldDistance = float.PositiveInfinity;
     public MountainGenerator mountainGenerator;
     public float mountainHeight = 10f;
@@ -52,18 +52,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //// Detect movement input in Update
         float moveVertical = Input.GetAxis("Vertical");
         float moveHorizontal = Input.GetAxis("Horizontal");
 
-        // Combine input for movement direction
         playerMovement = new Vector2(moveHorizontal, moveVertical);
         playerMovement = Vector2.ClampMagnitude(playerMovement, 1f);
 
         isJumpRequested = false;// Input.GetButtonDown("Jump");
         isClimbRequested = Input.GetButtonDown("Climb") ? !isClimbRequested : isClimbRequested;
 
-        // update climbing state same time
         activePlayer.SetClimbing(isClimbRequested);
        
         if (!(Gert.State == Player.PlayerState.DEAD || Emily.State == Player.PlayerState.DEAD))
@@ -71,7 +68,6 @@ public class PlayerController : MonoBehaviour
             activePlayer.MovePlayer(playerMovement, isJumpRequested, inactivePlayer.gameObject);
         }
 
-        //// Detect player switching
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             activePlayer = activePlayer == Gert ? Emily : Gert;

@@ -34,7 +34,6 @@ public class MountainGenerator : MonoBehaviour
 
     void BuildMountain()
     {
-        // Check if the unclimbable layer exists
         int unclimbableLayer = LayerMask.NameToLayer(unclimbableLayerName);
         if (unclimbableLayer == -1)
         {
@@ -42,41 +41,33 @@ public class MountainGenerator : MonoBehaviour
             return;
         }
 
-        // Create the parent object for the mountain
         GameObject mountainParent = new("Mountain");
 
-        // Calculate the starting position to center the mountain at (0, 0, 0)
         Vector3 startPosition = new(
             -mountainWidth * cubeSize / 2f,
-            0.5f, // Keep the y position at 0 for the base
+            0.5f, 
             -mountainDepth * cubeSize / 2f
         );
 
-        // Build only the outer layer of cubes
         for (int x = 0; x < mountainWidth; x++)
         {
             for (int y = 0; y < mountainHeight; y++)
             {
                 for (int z = 0; z < mountainDepth; z++)
                 {
-                    // Check if the cube is on the outer layer
                     if (IsOuterCube(x, y, z))
                     {
-                        // Determine if the cube is climbable or unclimbable
                         bool isClimbable;
 
-                        // Always make the top and bottom layers climbable
                         if (y == 0 || y == mountainHeight - 1)
                         {
-                            isClimbable = true; // Bottom and top layers are always climbable
+                            isClimbable = true; 
                         }
                         else
                         {
-                            // Randomly determine climbability for other layers
                             isClimbable = Random.value > unclimbableProbability;
                         }
 
-                        // Create a new cube based on climbability
                         GameObject cube;
                         if (isClimbable)
                         {
@@ -86,26 +77,21 @@ public class MountainGenerator : MonoBehaviour
                         {
                             cube = Instantiate(unclimbablePrefab, startPosition + new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity);
 
-                            cube.layer = unclimbableLayer; // Set the layer for unclimbable cubes
+                            cube.layer = unclimbableLayer; 
 
-                            // Adjust the BoxCollider for unclimbable cubes
                             BoxCollider boxCollider = cube.GetComponent<BoxCollider>();
                             if (boxCollider == null)
                             {
                                 boxCollider = cube.AddComponent<BoxCollider>();
                             }
 
-                            // Increase the size of the BoxCollider
                             boxCollider.size = Vector3.Scale(boxCollider.size, colliderSizeMultiplier);
 
-                            // Adjust the center of the BoxCollider to encapsulate the cube properly
                             boxCollider.center = colliderCenterOffset;
                         }
 
-                        // Set the cube's scale
                         cube.transform.localScale = new Vector3(cubeSize, cubeSize, cubeSize);
 
-                        // Parent the cube to the mountain object
                         cube.transform.parent = mountainParent.transform;
                     }
                 }
@@ -115,17 +101,14 @@ public class MountainGenerator : MonoBehaviour
 
     void CreateRestPlatforms()
     {
-        // Calculate the number of rest platforms for each side
         int restPlatformsPerSide = Mathf.FloorToInt(0.1f * mountainHeight);
 
-        // Define the positions for the rest platforms on each side
         Vector3 startPosition = new Vector3(
             -mountainWidth * cubeSize / 2f,
             0.5f,
             -mountainDepth * cubeSize / 2f
         );
 
-        // Left face (x = 0)
         for (int i = 0; i < restPlatformsPerSide; i++)
         {
             int randomHeight = restPlatformsPerSide * (i + 1);
@@ -133,7 +116,6 @@ public class MountainGenerator : MonoBehaviour
             Vector3 position = new Vector3(startPosition.x - 0.5f, randomHeight, randomDepth);
         }
 
-        // Right face (x = mountainWidth - 1)
         for (int i = 0; i < restPlatformsPerSide; i++)
         {
             int randomHeight = restPlatformsPerSide * (i + 1);
@@ -142,7 +124,6 @@ public class MountainGenerator : MonoBehaviour
             Instantiate(restPrefab, position, Quaternion.identity);
         }
 
-        // Front face (z = 0)
         for (int i = 0; i < restPlatformsPerSide; i++)
         {
             int randomHeight = restPlatformsPerSide * (i + 1);
@@ -151,7 +132,6 @@ public class MountainGenerator : MonoBehaviour
             Instantiate(restPrefab, position, Quaternion.identity);
         }
 
-        // Back face (z = mountainDepth - 1)
         for (int i = 0; i < restPlatformsPerSide; i++)
         {
             int randomHeight = restPlatformsPerSide * (i + 1);
@@ -166,7 +146,6 @@ public class MountainGenerator : MonoBehaviour
 
     }
 
-    // Function to determine if the cube is on the outer layer
     private bool IsOuterCube(int x, int y, int z)
     {
         return x == 0 || x == mountainWidth - 1 ||

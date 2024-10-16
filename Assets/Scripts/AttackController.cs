@@ -9,7 +9,7 @@ public class AttackController : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField]
     public GameObject bulletPrefab;
-    public float lastTime = 0; // Remember to implement the cooldown
+    public float lastTime = 0; 
     public CameraController cameraController;
     public Vector3 mousePos;
     public Vector3 worldPos;

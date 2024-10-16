@@ -63,7 +63,6 @@ public class ChainLineRenderer : MonoBehaviour
             if ((hit1.normal == hit2.normal && ((cornerX > gertX && cornerX < emilyX && cornerZ > emilyZ && cornerZ < gertZ ) ||  
                 (cornerX > emilyX && cornerX < gertZ && cornerZ > gertZ && cornerZ < emilyZ))) || hit1.normal != hit2.normal)
             {
-                // Add three points to the line renderer: start, offset (bend), and end
                 lineRenderer.positionCount = 3;
                 lineRenderer.SetPosition(0, Emily.position);
                 lineRenderer.SetPosition(1, corners[closest]);

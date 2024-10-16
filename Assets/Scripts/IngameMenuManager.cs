@@ -12,23 +12,23 @@ public class IngameMenuManager : MonoBehaviour
     public GameObject HelpButton;
     public Slider volumeSlider;
     public AudioMixer audioMixer;
-    public Image damageOverlay;  // Assign your UI Image (DamageoverlayChange) here
+    public Image damageOverlay;
     private Color overlayColour;
-    public float fadeSpeed = 0.3f;  // Speed at which the flash fades out
-    public float flashDuration = 0.3f;  // Duration of the flash
+    public float fadeSpeed = 0.3f; 
+    public float flashDuration = 0.3f; 
 
     public Image winFlash; 
-    public static bool inMenu = false;  // Tracks if the game is in the menu or not
+    public static bool inMenu = false; 
     
     // Start is called before the first frame update
     void Awake()
     {
-        controlsMenu.SetActive(false);  // Hide submenus
-        mainMenu.SetActive(false);  // Hide main menu
-        HelpButton.SetActive(false);  // Hide any additional buttons if needed
-        canvas.enabled = false;  // Ensure the Canvas is initially hidden
+        controlsMenu.SetActive(false);  
+        mainMenu.SetActive(false); 
+        HelpButton.SetActive(false); 
+        canvas.enabled = false;  
         overlayColour = damageOverlay.color;
-        overlayColour.a = 0;  // Fully transparent at start
+        overlayColour.a = 0;  
         damageOverlay.color = overlayColour;
         //winFlash.enabled = false;
     }
@@ -36,7 +36,6 @@ public class IngameMenuManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Check for Escape key press
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             // Toggle the in-game menu visibility
@@ -51,7 +50,6 @@ public class IngameMenuManager : MonoBehaviour
         }
     }
 
-    // Function to open the menu
     void OpenMenu()
     {
         inMenu = true;
@@ -72,7 +70,7 @@ public class IngameMenuManager : MonoBehaviour
         Time.timeScale = 1f;  
     }
 
-    // Volume control function
+    // Volume control function maybe
     public void SetVolume(float volume)
     {
         audioMixer.SetFloat("volume", Mathf.Log10(volume) * 20); 
@@ -82,24 +80,21 @@ public class IngameMenuManager : MonoBehaviour
     // Show controls menu
     public void ShowControlsMenu()
     {
-        mainMenu.SetActive(false);  // Hide main menu
-        controlsMenu.SetActive(true);  // Show controls menu
+        mainMenu.SetActive(false); 
+        controlsMenu.SetActive(true);  
     }
 
-    // Go back to the main menu from the controls menu
     public void BackToMainMenu()
     {
-        mainMenu.SetActive(true);  // Show main menu
-        controlsMenu.SetActive(false);  // Hide controls menu
+        mainMenu.SetActive(true);  
+        controlsMenu.SetActive(false);  
     }
 
 
     public void PlayerHitFeedback()
     {
-        // Set the alpha to 0.8 (strong visibility) when hit
         overlayColour.a = 0.8f;
         damageOverlay.color = overlayColour;
-        // Start the fade-out coroutine
         StartCoroutine(FadeDamageOverlay());
     }
 

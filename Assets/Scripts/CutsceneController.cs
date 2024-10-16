@@ -9,7 +9,6 @@ public class CutsceneController : MonoBehaviour
 {
     public ChangeScene changeScene;
    public TextMeshProUGUI dialogueText;
-    public Image characterImage;
     public string[] dialogueLines;
     private int currentLine = 0;
     public float typingSpeed = 0.05f;
@@ -29,25 +28,16 @@ public class CutsceneController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             dialogueText.text = ""; // Clear the text
-            if(characterImage != null)
-            {
-                characterImage.enabled = false; // Hide the sprite
-            }
-            
             SceneManager.LoadScene("FinalMovement");
         }
     }
 
     IEnumerator PlayCutscene()
     {
-        // Loop through each line of dialogue
         while (currentLine < dialogueLines.Length)
         {
-            yield return StartCoroutine(TypeLine(dialogueLines[currentLine])); // Set text
-            // Show the sprite
-
-            yield return new WaitForSeconds(3f); // Wait for 3 seconds before showing next line
-
+            yield return StartCoroutine(TypeLine(dialogueLines[currentLine])); 
+            yield return new WaitForSeconds(3f); 
             currentLine++;
         }
         yield return new WaitForSeconds(3f);
@@ -56,19 +46,18 @@ public class CutsceneController : MonoBehaviour
 
     void EndCutscene()
     {
-        dialogueText.text = ""; // Clear the text
-        characterImage.enabled = false; // Hide the sprite
+        dialogueText.text = ""; 
         changeScene.goToFinalMovementScene();
     }
      IEnumerator TypeLine(string line)
     {
-        dialogueText.text = ""; // Start with an empty text field
+        dialogueText.text = ""; 
 
         // Reveal each character one by one
         foreach (char letter in line.ToCharArray())
         {
             dialogueText.text += letter;
-            yield return new WaitForSeconds(typingSpeed); // Wait between each character
+            yield return new WaitForSeconds(typingSpeed); 
         }
     }
 }

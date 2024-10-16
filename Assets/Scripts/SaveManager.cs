@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
-    public bool assaultRifle; // In the Sherpa, call save manager to save the assault rifle being bought
+    public bool assaultRifle;
     public bool LazerRifle;
     public float maxHeight;
     public int money;

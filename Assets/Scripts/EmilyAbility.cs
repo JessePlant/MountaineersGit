@@ -32,14 +32,13 @@ public class EmilyAbility : MonoBehaviour
         }
                 if (isOnCooldown)
         {
-            cooldownTimer -= Time.deltaTime;  // Reduce the cooldown timer
-            cooldownText.text = Mathf.Ceil(cooldownTimer).ToString();  // Update countdown text
+            cooldownTimer -= Time.deltaTime; 
+            cooldownText.text = Mathf.Ceil(cooldownTimer).ToString();  
 
-            // If the cooldown is finished
             if (cooldownTimer <= 0)
             {
                 isOnCooldown = false;
-                cooldownText.text = "Heal Ready!!!";  // Show "Heal Ready!!!" message when cooldown ends
+                cooldownText.text = "Heal Ready!!!";  
             }
         }
     }

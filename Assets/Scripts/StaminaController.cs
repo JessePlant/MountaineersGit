@@ -23,7 +23,7 @@ public class StaminaController : MonoBehaviour
         bool whosLocked = CameraController.onGert;
         if( Gert < maxStam)
         {
-            if ((!whosLocked) || (whosLocked && !Input.anyKeyDown)) { // Hot Fix could make it to detect if any of the necessary keys were pressed. 
+            if ((!whosLocked) || (whosLocked && !Input.anyKeyDown)) {  
                 Gert += (regenRate * Time.deltaTime);
                 Debug.Log("Current Gert Stamina"+Gert);
             }
