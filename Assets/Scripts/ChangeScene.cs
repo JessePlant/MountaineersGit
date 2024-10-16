@@ -44,6 +44,7 @@ public class ChangeScene : MonoBehaviour
         Debug.Log("Play button pressed, loading new scene");
     }
     
+    
     public void BackToTitle()
     {
         SceneManager.LoadScene("Title");

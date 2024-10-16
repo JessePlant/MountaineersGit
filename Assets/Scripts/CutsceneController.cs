@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CutsceneController : MonoBehaviour
 {
@@ -17,6 +18,24 @@ public class CutsceneController : MonoBehaviour
     {
         dialogueText.text = ""; // Start with empty text
         StartCoroutine(PlayCutscene());
+    }
+
+    void Update()
+    {
+        SkipIntro();
+    }
+    public void SkipIntro()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            dialogueText.text = ""; // Clear the text
+            if(characterImage != null)
+            {
+                characterImage.enabled = false; // Hide the sprite
+            }
+            
+            SceneManager.LoadScene("FinalMovement");
+        }
     }
 
     IEnumerator PlayCutscene()
