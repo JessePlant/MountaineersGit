@@ -814,7 +814,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1053,6 +1053,7 @@ GameObject:
   - component: {fileID: 312903506}
   - component: {fileID: 312903505}
   - component: {fileID: 312903507}
+  - component: {fileID: 312903508}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1076,7 +1077,7 @@ MonoBehaviour:
   gameOverCanvas: {fileID: 0}
   gert: {fileID: 0}
   emily: {fileID: 0}
-  chained: {fileID: 312903507}
+  maxDistanceBetweenPlayers: 2.5
   gOver: 0
   enemyBehaviour: {fileID: 0}
 --- !u!4 &312903506
@@ -1149,7 +1150,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.05140114
+        value: 0.280756
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1200,6 +1201,21 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &312903508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312903504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a94375886d7fd4989bdd1d14c4d866, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Emily: {fileID: 85127005}
+  Gert: {fileID: 1966962916}
+  lineRenderer: {fileID: 312903507}
 --- !u!1001 &352774956
 PrefabInstance:
   m_ObjectHideFlags: 0
