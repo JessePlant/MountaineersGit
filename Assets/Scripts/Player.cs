@@ -281,7 +281,7 @@ public class Player : MonoBehaviour
        if (otherPlayer)
         {
             float newDistance = Vector3.Distance(playerRigidbody.position, otherPlayer.transform.position);
-            if (newDistance > 3f)
+            if (newDistance > 5f)
             {
                 playerRigidbody.position = lastPosition;
             }
