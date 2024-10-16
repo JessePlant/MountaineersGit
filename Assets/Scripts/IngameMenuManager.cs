@@ -12,7 +12,12 @@ public class IngameMenuManager : MonoBehaviour
     public GameObject HelpButton;
     public Slider volumeSlider;
     public AudioMixer audioMixer;
+    public Image damageOverlay;  // Assign your UI Image (DamageOverlay) here
+    private Color overlayColor;
+    public float fadeSpeed = 2f;  // Speed at which the flash fades out
+    public float flashDuration = 0.3f;  // Duration of the flash
 
+    public Image winFlash; 
     public static bool inMenu = false;  // Tracks if the game is in the menu or not
     
     // Start is called before the first frame update
@@ -22,6 +27,10 @@ public class IngameMenuManager : MonoBehaviour
         mainMenu.SetActive(false);  // Hide main menu
         HelpButton.SetActive(false);  // Hide any additional buttons if needed
         canvas.enabled = false;  // Ensure the Canvas is initially hidden
+        overlayColor = damageOverlay.color;
+        overlayColor.a = 0;  // Fully transparent at start
+        damageOverlay.color = overlayColor;
+        winFlash.enabled = false;
     }
 
     // Update is called once per frame
@@ -46,28 +55,28 @@ public class IngameMenuManager : MonoBehaviour
     void OpenMenu()
     {
         inMenu = true;
-        canvas.enabled = true;  // Enable the Canvas
-        mainMenu.SetActive(true);  // Show the main menu
-        controlsMenu.SetActive(false);  // Ensure submenus are hidden when opening the main menu
-        HelpButton.SetActive(true);  // If there are additional buttons, enable them
-        Time.timeScale = 0f;  // Pause the game (optional)
+        canvas.enabled = true; 
+        mainMenu.SetActive(true);  
+        controlsMenu.SetActive(false);  
+        HelpButton.SetActive(true);  
+        Time.timeScale = 0f; 
     }
 
     // Function to close the menu
     void CloseMenu()
     {
         inMenu = false;
-        mainMenu.SetActive(false);  // Hide the main menu
-        controlsMenu.SetActive(false);  // Hide the controls menu
-        canvas.enabled = false;  // Disable the Canvas
-        Time.timeScale = 1f;  // Resume the game (optional)
+        mainMenu.SetActive(false); 
+        controlsMenu.SetActive(false); 
+        canvas.enabled = false;  
+        Time.timeScale = 1f;  
     }
 
     // Volume control function
     public void SetVolume(float volume)
     {
-        audioMixer.SetFloat("volume", Mathf.Log10(volume) * 20);  // Set the volume
-        PlayerPrefs.SetFloat("volume", volume);  // Save volume setting
+        audioMixer.SetFloat("volume", Mathf.Log10(volume) * 20); 
+        PlayerPrefs.SetFloat("volume", volume);  
     }
 
     // Show controls menu
@@ -83,4 +92,32 @@ public class IngameMenuManager : MonoBehaviour
         mainMenu.SetActive(true);  // Show main menu
         controlsMenu.SetActive(false);  // Hide controls menu
     }
+
+
+    public void PlayerHitFeedback()
+    {
+        // Set the alpha to 0.8 (strong visibility) when hit
+        overlayColor.a = 0.8f;
+        damageOverlay.color = overlayColor;
+        // Start the fade-out coroutine
+        StartCoroutine(FadeDamageOverlay(overlayColor));
+    }
+
+    IEnumerator FadeDamageOverlay(Color overlay)
+    {
+        // Gradually fade out the overlay by decreasing the alpha
+        while (overlay.a > 0)
+        {
+            overlayColor.a -= Time.deltaTime * fadeSpeed;  // Fade out based on fade speed
+            damageOverlay.color = overlay;  // Apply the color to the image
+            yield return null;  // Wait for the next frame
+        }
+    }
+
+    public void WinFlash()
+    {
+        winFlash.enabled = true;
+        // change Scene
+    }
+
 }

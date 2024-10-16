@@ -31,7 +31,7 @@ public class EnemyBehaviour : MonoBehaviour
     public float maxHealth = 30f;
     public float currentHealth = 30f;
     public bool canMove = true;
-
+    public IngameMenuManager ingameMenuManager;
     public GameObject animator;
     Animator anim;
     void Awake() {
@@ -137,10 +137,13 @@ public class EnemyBehaviour : MonoBehaviour
                 if (RandomTarget == 0)
                 {
                     GertState.Damage(10);
+                    ingameMenuManager.PlayerHitFeedback();
+
                 }
                 else
                 {
                     EmilyState.Damage(10);
+                    ingameMenuManager.PlayerHitFeedback();
                 }
                 StartCoroutine(ResetAttack());
             }
