@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxDistanceBetweenPlayers = 2.5f; // Maximum distance allowed between Emily and Gert
     private float oldDistance = float.PositiveInfinity;
     public MountainGenerator mountainGenerator;
-    public float mountainHeight = 10f;
+    public float mountainHeight = 100f;
 
     private Vector2 playerMovement;
     private bool isJumpRequested;
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
             inactivePlayer.StopPlayer();
         }
 
-        if(Gert.transform.position.y> mountainHeight || Emily.transform.position.y> mountainHeight|| gOver==true)
+        if(Gert.transform.position.y> mountainHeight || Emily.transform.position.y> mountainHeight)
         {
             Debug.Log("Win Condition met");
            cs.goToWinScene();

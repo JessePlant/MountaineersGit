@@ -24,13 +24,17 @@ public class EmilyAbility : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!cameraController.onGert){
-            if(!isOnCooldown)
-            {
-                Heal();
+        if(cameraController!=null){
+            
+            if(!cameraController.onGert){
+                if(!isOnCooldown)
+                {
+                    Heal();
+                }
             }
         }
-                if (isOnCooldown)
+
+        if (isOnCooldown)
         {
             cooldownTimer -= Time.deltaTime;  // Reduce the cooldown timer
             cooldownText.text = Mathf.Ceil(cooldownTimer).ToString();  // Update countdown text
