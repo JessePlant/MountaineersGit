@@ -24,10 +24,13 @@ public class SherpaShopKeeper : MonoBehaviour
     public float arPrice = 1000;
     public float lsrPrice = 2000;
     public static bool isInShop = true;
-
+    public 
     void Start()
     {
-        CheckPurchased();
+        // CheckPurchased();
+        ARequipBTN.gameObject.SetActive(true);  
+        LSRequipBTN.gameObject.SetActive(true);
+        Slingequip.gameObject.SetActive(true);
     }
 
     void Update()
@@ -74,6 +77,7 @@ public class SherpaShopKeeper : MonoBehaviour
         activeGun.currentGun = guninfo.guns[1];
         shopCanvas.gameObject.SetActive(false);
         isInShop = false;
+         
     }
 
     public void equipLSR()
@@ -81,12 +85,12 @@ public class SherpaShopKeeper : MonoBehaviour
         activeGun.currentGun = guninfo.guns[2];
         shopCanvas.gameObject.SetActive(false); 
         isInShop = false;
+         
     }
     public void equipSling()
     {
         activeGun.currentGun = guninfo.guns[0];
         shopCanvas.gameObject.SetActive(false);
         isInShop = false;
-    }
-
+}
 }
